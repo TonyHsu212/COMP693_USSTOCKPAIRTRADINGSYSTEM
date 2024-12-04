@@ -4,4 +4,4 @@
 ##### 2. The project is being deployed on PA: https://www.pythonanywhere.com/user/xwm212/
 
 ### <p>Technology stack:</p> 
-##### <p>Python, Bootstrap, Flask, PythonAnywhere, MySQL</p>
+<p>Python, Bootstrap, Flask, PythonAnywhere, MySQL</p>
