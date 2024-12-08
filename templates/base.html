@@ -11,10 +11,6 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-<!--            <a class="navbar-brand" href="#">USPTS</a>-->
-<!--            <a class="navbar-brand" href="/">-->
-<!--            <img src="{{ url_for('static', filename='images/uspts-logo.png') }}" alt="USPTS Logo" width="40" height="40" class="d-inline-block align-text-top">-->
-<!--            </a>-->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -23,9 +19,24 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">USPTS Home</a>
                     </li>
+                    {% if session.get('user_name') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">{{session.get('user_name')}}-Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('auth.register_login') }}">Register/Login</a>
                     </li>
+                {% endif %}
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="{{ url_for('auth.register_login') }}">Register/Login</a>-->
+<!--                    </li>-->
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
