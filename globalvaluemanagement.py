@@ -1,5 +1,3 @@
-from flask_hashing import Hashing
-
 
 def _init():
     global _global_dict
