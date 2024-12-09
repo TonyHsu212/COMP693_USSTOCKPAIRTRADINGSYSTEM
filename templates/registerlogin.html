@@ -1,0 +1,78 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-md-5">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Register</h2>
+                        <form method="POST" action="/auth/register">
+                            <div class="form-group mb-3">
+                                <label for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="username1">Username</label>
+                                <input type="text" class="form-control" id="username1" name="userName" placeholder="Enter username" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="userType">User Type</label>
+                                <select class="form-control" id="userType" name="userType" placeholder="Please select user type" required>
+                                    <option>Please select user type</option>
+                                    <option value="Trader">Trader</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="password1">Password</label>
+                                <input type="password" class="form-control" id="password1" name="password" placeholder="Enter password" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="password2">re-Password</label>
+                                <input type="password" class="form-control" id="password" name="password2" placeholder="Enter password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block w-100">Register</button>
+                        </form>
+                        <div>
+                            <label>{{msg}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Login</h2>
+                        <form method="POST" action="/auth/login">
+                            <div class="form-group mb-3">
+                                <label for="username2">Username</label>
+                                <input type="text" class="form-control" id="username2" name="username" placeholder="Enter username" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="password2">Password</label>
+                                <input type="password" class="form-control" id="password2" name="password" placeholder="Enter password" required>
+                            </div>
+                            <form method="POST" action="/login">
+                                <button type="submit" class="btn btn-primary btn-block w-100">Login</button>
+                            </form>
+                            <div><label>{{msg}}</label></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}
+

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1>Welcome to the US Stock Pair Trading System</h1>
+    <p>for monitoring and trading pair stocks efficiently.</p>
+    <a href="/trading-strategies" class="btn btn-primary">Explore Strategies</a>
+    <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+</div>
+<hr>
+
+
+<!-- Row with Logo and Content -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- Left Column (Logo Section) -->
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+            <img src="{{ url_for('static', filename='images/uspts-logo.png') }}" alt="Logo" class="img-fluid">
+        </div>
+
+        <!-- Right Column (Content Section) -->
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/strategy.jpg') }}" class="card-img-top" alt="Strategies">
+                        <div class="card-body">
+                            <h5 class="card-title">Trading Strategies</h5>
+                            <p class="card-text">Discover the best pair trading strategies for US stocks.</p>
+                            <a href="/trading-strategies" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/analytics.jpg') }}" class="card-img-top" alt="Analytics">
+                        <div class="card-body">
+                            <h5 class="card-title">Analytics Dashboard</h5>
+                            <p class="card-text">View detailed analytics and performance reports.</p>
+                            <a href="/dashboard" class="btn btn-primary">View Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/data.jpg') }}" class="card-img-top" alt="Data">
+                        <div class="card-body">
+                            <h5 class="card-title">Stock Data</h5>
+                            <p class="card-text">Get the latest stock pair data and signals.</p>
+                            <a href="/stock-data" class="btn btn-primary">View Data</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/strategy.jpg') }}" class="card-img-top" alt="Strategies">
+                        <div class="card-body">
+                            <h5 class="card-title">Trading Strategies</h5>
+                            <p class="card-text">Discover the best pair trading strategies for US stocks.</p>
+                            <a href="/trading-strategies" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/analytics.jpg') }}" class="card-img-top" alt="Analytics">
+                        <div class="card-body">
+                            <h5 class="card-title">Analytics Dashboard</h5>
+                            <p class="card-text">View detailed analytics and performance reports.</p>
+                            <a href="/dashboard" class="btn btn-primary">View Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/data.jpg') }}" class="card-img-top" alt="Data">
+                        <div class="card-body">
+                            <h5 class="card-title">Stock Data</h5>
+                            <p class="card-text">Get the latest stock pair data and signals.</p>
+                            <a href="/stock-data" class="btn btn-primary">View Data</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,7 +4,7 @@
 CREATE SCHEMA TradingSystem; 
 
 -- Alternatively, you can use CREATE DATABASE (interchangeable with CREATE SCHEMA) 
-CREATE DATABASE TradingSystem; 
+-- CREATE DATABASE TradingSystem; 
 
 -- Switch to the new schema 
 USE TradingSystem;
@@ -12,11 +12,12 @@ USE TradingSystem;
 -- 1. User Table
 CREATE TABLE User (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(100),
-    Email VARCHAR(255) UNIQUE,
-    Phone VARCHAR(15),
-    Address VARCHAR(255),
-    DOB DATE
+    userName VARCHAR(50),
+    firstName VARCHAR(20),
+    lastName VARCHAR(20),
+    userType VARCHAR(20),
+    pwd VARCHAR(100),
+    accountState VARCHAR(20)
 );
 
 -- 2. Account Table
@@ -24,6 +25,7 @@ CREATE TABLE Account (
     AccountID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
     Balance DECIMAL(15, 2),
+    netProfit DECIMAL(15, 2),
     AccountType ENUM('Cash', 'Margin'),
     FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE
 );
@@ -154,3 +156,25 @@ CREATE TABLE ProfitLoss (
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID) ON DELETE CASCADE,
     FOREIGN KEY (StockID) REFERENCES Stock(StockID) ON DELETE CASCADE
 );
+
+-- 12. US Stock Financial Indicators Table
+CREATE TABLE USStockFinancials (
+    IndicatorID INT AUTO_INCREMENT PRIMARY KEY,
+    StockID INT NOT NULL, -- Foreign key referencing Stock table
+    Revenue DECIMAL(15, 2), -- Total revenue in USD
+    NetIncome DECIMAL(15, 2), -- Net income in USD
+    EPS DECIMAL(10, 2), -- Earnings Per Share
+    PE_Ratio DECIMAL(10, 2), -- Price to Earnings ratio
+    DividendYield DECIMAL(5, 2), -- Dividend yield in percentage
+    MarketCap DECIMAL(20, 2), -- Market capitalization in USD
+    ROE DECIMAL(5, 2), -- Return on Equity in percentage
+    ROA DECIMAL(5, 2), -- Return on Assets in percentage
+    DebtToEquity DECIMAL(5, 2), -- Debt-to-Equity ratio
+    EBITDA DECIMAL(15, 2), -- Earnings Before Interest, Taxes, Depreciation, and Amortization
+    ProfitMargin DECIMAL(5, 2), -- Profit margin in percentage
+    LastUpdated DATETIME, -- Timestamp for the last update
+    FOREIGN KEY (StockID) REFERENCES Stock(StockID) ON DELETE CASCADE
+);
+
+SELECT USER();
+SELECT User, Host FROM mysql.user;
