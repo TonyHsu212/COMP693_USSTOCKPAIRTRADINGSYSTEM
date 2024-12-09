@@ -88,9 +88,10 @@ def register():
 
         if account_username:
             msg1 = 'this account already exists!'
-            return render_template('registerlogin.html', msg1=msg)
+            return render_template('registerlogin.html', msg1=msg1)
 
-        if pwd == repwd and userType == 'trader':
+        if pwd == repwd and userType == 'Trader':
+            print('pwd = repwd ')
             hashed_pwd = hashing_password(pwd)
         else:
             msg1 = 'please ensure the two pwd are the same!'
@@ -121,12 +122,12 @@ def login():
         if not user_name:
             msg2 = 'please input your user name !'
             # print(msg)
-            return render_template('registerlogin.html.html', msg2=msg2)
+            return render_template('registerlogin.html', msg2=msg2)
         pwd = request.form.get('password')
         if not pwd:
             msg2 = 'please input your password !'
             # print(msg)
-            return render_template('registerlogin.html.html', msg2=msg2)
+            return render_template('registerlogin.html', msg2=msg2)
 
         connection.execute('select * from User where username = %s', (user_name, ))
         account_user = connection.fetchone()
@@ -141,7 +142,7 @@ def login():
                 if len(account_user) == 13:
                     msg2 = 'please notice your account is inactive!'
                     print(msg2)
-                    return render_template('registerlogin.html.html', msg2=msg2)
+                    return render_template('registerlogin.html', msg2=msg2)
                 else:
                     print('here3')
                     account_state = account_user[14]
@@ -150,7 +151,7 @@ def login():
             hashed_password = account_user[5]
         else:
             msg2 = 'Incorrect user name !'
-            return render_template('registerlogin.html.html', msg2=msg2)
+            return render_template('registerlogin.html', msg2=msg2)
         if hashed_password is not None:
             # print('sql successful 2')
             t_true = password_check(hashed_password, pwd)
@@ -188,13 +189,13 @@ def login():
                     connection.execute('update User set accountState = %s where userName = %s', ('Locked', user_name, ))
                     login_num = 0
                     msg2 = 'your password has been not correct for three times, your account is locked, waiting for manager to unlock it!'
-                    return render_template('registerlogin.html.html', msg2=msg2)
-                return render_template('registerlogin.html.html', msg2=msg2)
+                    return render_template('registerlogin.html', msg2=msg2)
+                return render_template('registerlogin.html', msg2=msg2)
         else:
             msg2 = 'please input your password!'
-            return render_template('registerlogin.html.html', msg2=msg2)
+            return render_template('registerlogin.html', msg2=msg2)
         msg2 = 'no account found.'
-    return render_template('registerlogin.html.html', msg2=msg2)
+    return render_template('registerlogin.html', msg2=msg2)
 
 
 @auth_bp.route('/to_logout', methods=['POST', 'GET'])
