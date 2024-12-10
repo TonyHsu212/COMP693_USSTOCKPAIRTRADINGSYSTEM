@@ -16,3 +16,11 @@
 <p> The project is being deployed on PA: https://xwm212.pythonanywhere.com </p>
 
 <p> Technology stack: Python, Bootstrap, Flask, PythonAnywhere, MySQL</p>
+
+### Reference
+<p>Alpaca Trade API Python Tutorial | The Very Basics Getting Account Details: https://www.youtube.com/watch?v=xXng_eL3Fd0&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7</p>
+<p>Alpaca Trade API Python Tutorial | Alpaca Trade API Python Tutorial | Creating Orders for Paper Trading: https://www.youtube.com/watch?v=2kkbYPBQvbk&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=2</p>
+<p>Alpaca Trade API Python Tutorial | Python TradingViewCharts In Your Flask Application with Alpaca API: https://www.youtube.com/watch?v=LLhb2cMcgZ4&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=3</p>
+<p>Alpaca Trade API Python Tutorial | Python Paper Trading Interface: https://www.youtube.com/watch?v=d-M-8WHdb5E&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=4</p>
+<p>Alpaca trading api: https://docs.alpaca.markets/docs/trading-api</p>
+<p>Alpaca trading api: https://docs.alpaca.markets/docs/about-market-data-api</p>
