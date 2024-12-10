@@ -1,0 +1,64 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+}
+
+.sidebar-header {
+  text-align: center;
+}
+/* Custom content alignment */
+.container-fluid {
+    margin-right: 0;
+    padding-right: 20px; /* Optional: Add some padding if needed */
+}
+
+
+.nav-link {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link i {
+  font-size: 1.2rem;
+}
+
+.flex-grow-1 {
+  overflow-y: auto;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+body1 {
+    background-color: #007bff;
+}
+
+.jumbotron {
+    padding: 4rem 2rem;
+    background-color:  #007bff;
+    border-radius: 0.3rem;
+}
+
+.jumbotron1 {
+    padding: 4rem 2rem;
+    background-color: #e9ecef;
+    border-radius: 0.3rem;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar {
+    width: 250px;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 16px;
+}
+
