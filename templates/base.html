@@ -21,7 +21,7 @@
                     </li>
                     {% if session.get('user_name') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dashboard') }}">{{session.get('user_name')}}-Dashboard</a>
+                        <a class="nav-link" href="/dashboard">{{session.get('user_name')}}-Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
@@ -38,7 +38,7 @@
 <!--                        <a class="nav-link" href="{{ url_for('auth.register_login') }}">Register/Login</a>-->
 <!--                    </li>-->
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/">About</a>
                     </li>
                 </ul>
             </div>

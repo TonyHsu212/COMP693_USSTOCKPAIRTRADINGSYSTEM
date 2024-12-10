@@ -23,10 +23,8 @@ dbname = "tradingsystem"
 
 
 def getCursor():
-    print('connect.dbuser', connect.dbuser)
     global dbconn
     global connection
-    print('connect.dbuser', connect.dbuser)
     connection = mysql.connector.connect(user="root",\
     password="801221789801", host="localhost", \
     database="tradingsystem", autocommit=True)
@@ -37,7 +35,7 @@ def getCursor():
 def hashing_password(password):
     # Generate the hashed password with a salt
     hashedpassword = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    print('password hashed:', hashedpassword)
+    # print('password hashed:', hashedpassword)
     return hashedpassword
 
 
@@ -54,21 +52,21 @@ def register_login():
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    print('register')
+    # print('register')
     connection = getCursor()
     if request.method == 'POST':
         user_name = request.form.get('userName')
-        print(user_name)
+        # print(user_name)
         pwd = request.form.get('password')
-        print(pwd)
+        # print(pwd)
         repwd = request.form.get('password2')
-        print(repwd)
+        # print(repwd)
         fname = request.form.get('firstName')
-        print(fname)
+        # print(fname)
         lname = request.form.get('lastName')
-        print(lname)
+        # print(lname)
         userType = request.form.get('userType')
-        print(userType)
+        # print(userType)
         accountState = 'Active'
 
         connection.execute('select * from User where username = %s', (user_name, ))
@@ -91,11 +89,11 @@ def register():
             return render_template('registerlogin.html', msg1=msg1)
 
         if pwd == repwd and userType == 'Trader':
-            print('pwd = repwd ')
+            # print('pwd = repwd ')
             hashed_pwd = hashing_password(pwd)
         else:
             msg1 = 'please ensure the two pwd are the same!'
-            print('pwd != repwd ')
+            # print('pwd != repwd ')
             return render_template('registerlogin.html', msg1=msg1)
 
         # Insert hashed password into the database
@@ -105,7 +103,7 @@ def register():
         msg1 = 'register successfully, please login!'
         return render_template('registerlogin.html', msg1=msg1)
     else:
-        print('it is get methon: ')
+        # print('it is get methon: ')
         msg1 = 'register again!'
         return render_template('registerlogin.html', msg1=msg1)
 
@@ -134,17 +132,17 @@ def login():
         connection.clear_attributes()
         if account_user is not None:
             account_user = list(account_user)
-            print('account_user:', account_user)
+            # print('account_user:', account_user)
             account_state = account_user[6]
-            print('here1')
+            # print('here1')
             if account_user and account_state != 'Active':
-                print('here2')
+                # print('here2')
                 if len(account_user) == 13:
                     msg2 = 'please notice your account is inactive!'
-                    print(msg2)
+                    # print(msg2)
                     return render_template('registerlogin.html', msg2=msg2)
                 else:
-                    print('here3')
+                    # print('here3')
                     account_state = account_user[14]
         if account_user is not None:
             # print('account_user', account_user[0])
@@ -160,13 +158,13 @@ def login():
                 session['id'] = account_user[0]
                 session['user_name'] = account_user[1]
                 session['role'] = account_user[4]
-                print('role:', account_user[4])
+                # print('role:', account_user[4])
                 if session['role'] == 'Trader':
-                    print(session['role'])
+                    # print(session['role'])
                     id = account_user[0]
                     connection.execute('select * from User where UserID = %s', (id, ))
                     account_info = connection.fetchone()
-                    account_info_new = list(account_info)
+                    # account_info_new = list(account_info)
                     return render_template('dashboard.html', user_name=user_name)
                 else:
                     msg2 = 'no account found.'
@@ -176,14 +174,14 @@ def login():
                 return render_template('registerlogin.html', msg2=msg2)
             elif t_true and account_state != 'Active':
                 msg2 = 'your account is not active. please contact manager to active your account!'
-                print('msg inactive2', msg2)
+                # print('msg inactive2', msg2)
                 return render_template('registerlogin.html', msg2=msg2)
             else:
                 login_num = globalvaluemanagement.get_value('0')
                 msg2 = 'your password is not correct, please input again!'
                 login_num = login_num + 1
                 globalvaluemanagement.set_value('0', login_num)
-                print('login_num', login_num)
+                # print('login_num', login_num)
                 if login_num > 3:
                     account_user[6] = 'Locked'
                     connection.execute('update User set accountState = %s where userName = %s', ('Locked', user_name, ))
