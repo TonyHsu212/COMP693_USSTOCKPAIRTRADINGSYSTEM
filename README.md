@@ -18,9 +18,9 @@
 <p> Technology stack: Python, Bootstrap, Flask, PythonAnywhere, MySQL</p>
 
 ### Reference
-<p>Alpaca Trade API Python Tutorial | The Very Basics Getting Account Details: https://www.youtube.com/watch?v=xXng_eL3Fd0&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7</p>
-<p>Alpaca Trade API Python Tutorial | Alpaca Trade API Python Tutorial | Creating Orders for Paper Trading: https://www.youtube.com/watch?v=2kkbYPBQvbk&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=2</p>
-<p>Alpaca Trade API Python Tutorial | Python TradingViewCharts In Your Flask Application with Alpaca API: https://www.youtube.com/watch?v=LLhb2cMcgZ4&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=3</p>
-<p>Alpaca Trade API Python Tutorial | Python Paper Trading Interface: https://www.youtube.com/watch?v=d-M-8WHdb5E&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=4</p>
-<p>Alpaca trading api: https://docs.alpaca.markets/docs/trading-api</p>
-<p>Alpaca trading api: https://docs.alpaca.markets/docs/about-market-data-api</p>
+<p>Alpaca Trading. (2023, June 15). Alpaca Trade API Python tutorial | The very basics getting account details [Video]. YouTube. https://www.youtube.com/watch?v=xXng_eL3Fd0&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7</p>
+<p>Alpaca Trading. (2023, June 16). Alpaca Trade API Python tutorial | Creating orders for paper trading [Video]. YouTube. https://www.youtube.com/watch?v=2kkbYPBQvbk&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=2</p>
+<p>Alpaca Trading. (2023, June 17). Python TradingView charts in your Flask application with Alpaca API [Video]. YouTube. https://www.youtube.com/watch?v=LLhb2cMcgZ4&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=3</p>
+<p>Alpaca Trading. (2023, June 18). Python paper trading interface [Video]. YouTube. https://www.youtube.com/watch?v=d-M-8WHdb5E&list=PLHxzTWFoIu2vdbzddsgCm0oh7kK3Ge8J7&index=4</p>
+<p>Alpaca. (n.d.). Alpaca trading API. Alpaca. Retrieved December 12, 2024, from https://docs.alpaca.markets/docs/trading-api</p>
+<p>Alpaca. (n.d.). About market data API. Alpaca. Retrieved December 12, 2024, from https://docs.alpaca.markets/docs/about-market-data-api</p>
