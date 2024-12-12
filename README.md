@@ -2,6 +2,7 @@
 
 ### About the program
 <p> This is an Independent Learning Project of Lincol Uni MAC for Weimin Xu(student id: 1159079) in 2024 Summer School. </p>
+<p>username: tony212, pwd:123</p>
 
 <p> The project is an US STOCK PAIR TRADING SYSTEM used to find stock pairs with high and stable correlation comparisons and trade the pairs automaically, it includes six modules as following: </br>
     &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; * stock quotes</br>
