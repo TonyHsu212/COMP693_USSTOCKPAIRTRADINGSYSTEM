@@ -4,6 +4,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+
 <div class="d-flex gap-3 vh-100">
     <!-- Sidebar -->
     <nav class="sidebar bg-light vh-120 p-3">
@@ -15,7 +16,10 @@
         </form>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Stock Pair</a>
+<!--                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Stock Pair</a>-->
+                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}">
+                    <i class="bi bi-cash-coin me-2"></i> Stock Pair
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
@@ -58,6 +62,5 @@
         </nav>
     </main>
 </div>
-
 
 {% endblock %}
