@@ -49,111 +49,117 @@
     <main class="p-4 flex-grow-1 bg-light">
         <body>
             <h1>Stock Pair Analysis</h1>
-            <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm">
-                <label for="stock1">Stock Symbol 1:</label>
-                <input type="text" id="stock1" name="stock1" required><br><br>
+<!--            <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm">-->
+<!--                <label for="stock1">Stock Symbol 1:</label>-->
+<!--                <input type="text" id="stock1" name="stock1" required><br><br>-->
 
-                <label for="stock2">Stock Symbol 2:</label>
-                <input type="text" id="stock2" name="stock2" required><br><br>
+<!--                <label for="stock2">Stock Symbol 2:</label>-->
+<!--                <input type="text" id="stock2" name="stock2" required><br><br>-->
 
-                <label for="period">Period:</label>
-                <select id="period" name="period" required>
-                    <option value="1d">1 day</option>
-                    <option value="5d">5 day</option>
-                    <option value="1wk">1 week</option>
-                    <option value="1mo">1 month</option>
-                    <option value="3mo">3 month</option>
-                    <option value="6mo">6 month</option>
-                    <option value="1y">1 Year</option>
-                    <option value="2y">2 year</option>
-                    <option value="5y">5 year</option>
-                    <option value="1ytd">till now</option>
-                    <option value="max">Max</option>
-                </select><br><br>
+<!--                <label for="period">Period:</label>-->
+<!--                <select id="period" name="period" required>-->
+<!--                    <option value="1d">1 day</option>-->
+<!--                    <option value="5d">5 day</option>-->
+<!--                    <option value="1wk">1 week</option>-->
+<!--                    <option value="1mo">1 month</option>-->
+<!--                    <option value="3mo">3 month</option>-->
+<!--                    <option value="6mo">6 month</option>-->
+<!--                    <option value="1y">1 Year</option>-->
+<!--                    <option value="2y">2 year</option>-->
+<!--                    <option value="5y">5 year</option>-->
+<!--                    <option value="1ytd">till now</option>-->
+<!--                    <option value="max">Max</option>-->
+<!--                </select><br><br>-->
 
-                <label for="interval">Interval:</label>
-                <select id="interval" name="interval" required>
-                    <option value="1m">1 min</option>
-                    <option value="2m">2 min</option>
-                    <option value="5m">5 min</option>
-                    <option value="15m">15 min</option>
-                    <option value="30m">30 min</option>
-                    <option value="60m">60 min</option>
-                    <option value="1d">1 Day</option>
-                    <option value="5d">5 day</option>
-                    <option value="1wk">1 week</option>
-                    <option value="1m">1 month</option>
-                </select><br><br>
+<!--                <label for="interval">Interval:</label>-->
+<!--                <select id="interval" name="interval" required>-->
+<!--                    <option value="1m">1 min</option>-->
+<!--                    <option value="2m">2 min</option>-->
+<!--                    <option value="5m">5 min</option>-->
+<!--                    <option value="15m">15 min</option>-->
+<!--                    <option value="30m">30 min</option>-->
+<!--                    <option value="60m">60 min</option>-->
+<!--                    <option value="1d">1 Day</option>-->
+<!--                    <option value="5d">5 day</option>-->
+<!--                    <option value="1wk">1 week</option>-->
+<!--                    <option value="1m">1 month</option>-->
+<!--                </select><br><br>-->
 
-                <button type="submit" name="analyze">Analyze</button>
+<!--                <button type="submit" name="analyze">Analyze</button>-->
+<!--            </form>-->
+
+            <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm" class="d-flex flex-wrap gap-3 align-items-center">
+                <!-- First Row -->
+                <div class="d-flex gap-3 flex-wrap">
+                    <div>
+                        <label for="stock1">Stock1:</label>
+                        <input type="text" id="stock1" name="stock1" required>
+                    </div>
+                    <div>
+                        <label for="stock2">Stock2:</label>
+                        <input type="text" id="stock2" name="stock2" required>
+                    </div>
+                    <div>
+                        <label for="period">Period:</label>
+                        <select id="period" name="period" required>
+                            <option value="1d">1 day</option>
+                            <option value="5d">5 day</option>
+                            <option value="1wk">1 week</option>
+                            <option value="1mo">1 month</option>
+                            <option value="3mo">3 month</option>
+                            <option value="6mo">6 month</option>
+                            <option value="1y">1 Year</option>
+                            <option value="2y">2 year</option>
+                            <option value="5y">5 year</option>
+                            <option value="1ytd">till now</option>
+                            <option value="max">Max</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="interval">Interval:</label>
+                        <select id="interval" name="interval" required>
+                            <option value="1m">1 min</option>
+                            <option value="2m">2 min</option>
+                            <option value="5m">5 min</option>
+                            <option value="15m">15 min</option>
+                            <option value="30m">30 min</option>
+                            <option value="60m">60 min</option>
+                            <option value="1d">1 Day</option>
+                            <option value="5d">5 day</option>
+                            <option value="1wk">1 week</option>
+                            <option value="1m">1 month</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Second Row -->
+                <div class="d-flex gap-3 flex-wrap">
+                    <div class="align-self-end">
+                        <button type="submit" name="analyze" class="btn btn-primary">Analyze</button>
+                    </div>
+                </div>
             </form>
 
+
+<!--            <h2>Analysis Results</h2>-->
+<!--            <p>Correlation: <span id="correlation">{{ result['correlation'] }}</span></p>-->
+<!--            <p>P-Value: <span id="pValue">{{ result['pValue'] }}</span></p>-->
             <h2>Analysis Results</h2>
-            <div id="results">
-                <p>Correlation: <span id="correlation">{{ result['correlation']}}</span></p>
+            <div class="d-flex gap-3 align-items-center">
+                <p>Correlation: <span id="correlation">{{ result['correlation'] }}</span></p>
                 <p>P-Value: <span id="pValue">{{ result['pValue'] }}</span></p>
             </div>
 
-            <canvas id="spreadChart" width="800" height="400"></canvas>
 
-            <script>
-                async function stockPairMatch() {
-                    const stock1 = document.getElementById('stock1').value;
-                    const stock2 = document.getElementById('stock2').value;
-                    const period = document.getElementById('period').value;
-                    const interval = document.getElementById('interval').value;
+            <h3 class="mt-4">Spread Chart</h3>
+            <div class="text-center">
+                {% if plot_data %}
+                    <img src="data:image/png;base64,{{ plot_data }}" class="img-fluid" alt="Spread Chart">
+                {% else %}
+                    <p>No chart available.</p>
+                {% endif %}
+            </div>
 
-                    if (!stock1 || !stock2 || !period || !interval) {
-                        alert('Please fill out all fields.');
-                        return;
-                    }
 
-                    try {
-                        const response = await fetch(`/analyze_stock_pair?stock1=${stock1}&stock2=${stock2}&period=${period}&interval=${interval}`);
-                        const data = await response.json();
-
-                        if (data.error) {
-                            alert(data.error);
-                            return;
-                        }
-
-                        document.getElementById('correlation').textContent = data.correlation.toFixed(4);
-                        document.getElementById('pValue').textContent = data.pValue.toFixed(4);
-
-                        renderSpreadChart(data.dates, data.spread);
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('An error occurred while fetching data.');
-                    }
-                }
-
-                function renderSpreadChart(dates, spread) {
-                    const ctx = document.getElementById('spreadChart').getContext('2d');
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: dates,
-                            datasets: [{
-                                label: 'Spread',
-                                data: spread,
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                fill: true
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { display: true }
-                            },
-                            scales: {
-                                x: { title: { display: true, text: 'Date' } },
-                                y: { title: { display: true, text: 'Spread' } }
-                            }
-                        }
-                    });
-                }
-            </script>
         </body>
     </main>
 </div>

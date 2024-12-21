@@ -1,5 +1,9 @@
+import base64
+import io
+
 from flask import Flask, request, jsonify, Blueprint, render_template, redirect, url_for, get_flashed_messages
 import yfinance as yf
+from matplotlib.figure import Figure
 from scipy.stats import pearsonr
 from flask import flash
 
@@ -63,9 +67,44 @@ def analyze_stock_pair():
             }
             # After processing the result
 
+            # # Create a Matplotlib figure
+            # fig = Figure()
+            # ax = fig.add_subplot(1, 1, 1)
+            # ax.plot(combined_data.index, spread, label='Spread', color='blue')
+            # ax.set_title(f"Spread ({stock1} - {stock2})")
+            # ax.set_xlabel('Date')
+            # ax.set_ylabel('Spread')
+            # ax.legend()
+            #
+            # # Convert the plot to a PNG image
+            # buf = io.BytesIO()
+            # fig.savefig(buf, format="png")
+            # buf.seek(0)
+            # img_data = base64.b64encode(buf.read()).decode('utf-8')
+            # buf.close()
+
+            # Create a Matplotlib figure
+            new_height = 4 * 0.95  # Reduce height by 20%
+            fig = Figure(figsize=(8, new_height))  # Adjusted the size for shrinking
+            ax = fig.add_subplot(1, 1, 1)
+            ax.plot(combined_data.index, spread, label='Spread', color='blue')
+            ax.set_title(f"Spread ({stock1} - {stock2})")
+            ax.set_xlabel('Date')
+            ax.set_ylabel('Spread')
+            ax.legend()
+
+            # Convert the plot to a PNG image
+            buf = io.BytesIO()
+            fig.savefig(buf, format="png")
+            buf.seek(0)
+
+            # Shrink the image by half
+            img_data = base64.b64encode(buf.read()).decode('utf-8')
+            buf.close()
+
             flash(result)
             # return redirect(url_for('pairanalyze.analyze_pair_page'))
-            return render_template('stock_pair.html', result=result)
+            return render_template('stock_pair.html', result=result, plot_data=img_data)
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
