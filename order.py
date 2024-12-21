@@ -78,9 +78,9 @@ try:
 
     # Manually filter based on status if needed
     fill_orders = [order for order in all_orders if order.status == "Filled"]
-    print("Filtered filled orders:", fill_orders)
+    # print("Filtered filled orders:", fill_orders)
     open_orders = [order for order in all_orders if order.status == "accepted"]
-    print("Filtered opened orders:", open_orders)
+    # print("Filtered opened orders:", open_orders)
 
     if not open_orders:
         print("No open orders found. Proceeding with order submission.")
@@ -117,7 +117,7 @@ except Exception as e:
 # for order in open_orders:
 #     print(order)
 ###########################cancel for order##################################
-client_trading.cancel_order_by_id(order_id="d9983490-9f7f-48f6-937b-b3d74ec0d877")
+# client_trading.cancel_order_by_id(order_id="d9983490-9f7f-48f6-937b-b3d74ec0d877")
 ##########################################################################
 # import alpaca_trade_api as trade_api
 # #api key linked from env file
@@ -149,37 +149,37 @@ def order_buy_pair():
         action = 'Long' if request.form.get('buy') else 'Short'  # Determine action based on button clicked
 
         # Process or display the received data (this can be adjusted for your needs)
-        print(f"Stock Code 1: {stock_code1}")
-        print(f"Stock Code 2: {stock_code2}")
-        print(f"Quantity for Stock 1: {quantity_stock1}")
-        print(f"Quantity for Stock 2: {quantity_stock2}")
-        print(f"Action: {action}")
+        # print(f"Stock Code 1: {stock_code1}")
+        # print(f"Stock Code 2: {stock_code2}")
+        # print(f"Quantity for Stock 1: {quantity_stock1}")
+        # print(f"Quantity for Stock 2: {quantity_stock2}")
+        # print(f"Action: {action}")
 
         # Prepare the buy order
         request_order_buy = MarketOrderRequest(
             symbol=stock_code1,
             qty=quantity_stock1,
-            side=OrderSide.Buy,
+            side=OrderSide.BUY,
             time_in_force=TimeInForce.GTC
         )
 
         try:
             all_orders = client_trading.get_orders()
-            print("Retrieved all orders:", all_orders)
+            # print("Retrieved all orders:", all_orders)
 
             # Manually filter based on status if needed
             fill_orders = [order for order in all_orders if order.status == "Filled"]
-            print("Filtered filled orders:", fill_orders)
+            # print("Filtered filled orders:", fill_orders)
             open_orders = [order for order in all_orders if order.status == "accepted"]
-            print("Filtered opened orders:", open_orders)
+            # print("Filtered opened orders:", open_orders)
 
             if not open_orders:
-                print("No open orders found. Proceeding with order submission.")
+                # print("No open orders found. Proceeding with order submission.")
                 request_order_submit = client_trading.submit_order(order_data=request_order_buy)
-                print("Order submitted successfully!")
-                print(request_order_submit)
+                # print("Order submitted successfully!")
+                # print(request_order_submit)
             else:
-                print("Conflicting open orders exist. Review and cancel them if needed:")
+                # print("Conflicting open orders exist. Review and cancel them if needed:")
                 for order in open_orders:
                     print(f"Order ID: {order.id}, Symbol: {order.symbol}, Side: {order.side}, Quantity: {order.qty}")
         except Exception as e:
@@ -195,13 +195,13 @@ def order_buy_pair():
         )
         try:
             all_orders = client_trading.get_orders()
-            print("Retrieved all orders:", all_orders)
+            # print("Retrieved all orders:", all_orders)
 
             # Manually filter based on status if needed
             fill_orders = [order for order in all_orders if order.status == "Filled"]
-            print("Filtered filled orders:", fill_orders)
+            # print("Filtered filled orders:", fill_orders)
             open_orders = [order for order in all_orders if order.status == "accepted"]
-            print("Filtered opened orders:", open_orders)
+            # print("Filtered opened orders:", open_orders)
 
             if not open_orders:
                 print("No open orders found. Proceeding with order submission.")
@@ -229,11 +229,11 @@ def order_sell_pair():
         action = 'Long' if request.form.get('buy') else 'Short'  # Determine action based on button clicked
 
         # Process or display the received data (this can be adjusted for your needs)
-        print(f"Stock Code 1: {stock_code1}")
-        print(f"Stock Code 2: {stock_code2}")
-        print(f"Quantity for Stock 1: {quantity_stock1}")
-        print(f"Quantity for Stock 2: {quantity_stock2}")
-        print(f"Action: {action}")
+        # print(f"Stock Code 1: {stock_code1}")
+        # print(f"Stock Code 2: {stock_code2}")
+        # print(f"Quantity for Stock 1: {quantity_stock1}")
+        # print(f"Quantity for Stock 2: {quantity_stock2}")
+        # print(f"Action: {action}")
 
         # Prepare the SELL order
         request_order_sell = MarketOrderRequest(
@@ -245,13 +245,13 @@ def order_sell_pair():
 
         try:
             all_orders = client_trading.get_orders()
-            print("Retrieved all orders:", all_orders)
+            # print("Retrieved all orders:", all_orders)
 
             # Manually filter based on status if needed
             fill_orders = [order for order in all_orders if order.status == "Filled"]
-            print("Filtered filled orders:", fill_orders)
+            # print("Filtered filled orders:", fill_orders)
             open_orders = [order for order in all_orders if order.status == "accepted"]
-            print("Filtered opened orders:", open_orders)
+            # print("Filtered opened orders:", open_orders)
 
             if not open_orders:
                 print("No open orders found. Proceeding with order submission.")
@@ -275,13 +275,13 @@ def order_sell_pair():
         )
         try:
             all_orders = client_trading.get_orders()
-            print("Retrieved all orders:", all_orders)
+            # print("Retrieved all orders:", all_orders)
 
             # Manually filter based on status if needed
             fill_orders = [order for order in all_orders if order.status == "Filled"]
-            print("Filtered filled orders:", fill_orders)
+            # print("Filtered filled orders:", fill_orders)
             open_orders = [order for order in all_orders if order.status == "accepted"]
-            print("Filtered opened orders:", open_orders)
+            # print("Filtered opened orders:", open_orders)
 
             if not open_orders:
                 print("No open orders found. Proceeding with order submission.")

@@ -6,6 +6,7 @@ from account_management import auth_bp
 from chart import convertWatchlist
 from order import order_bp
 from stock_matching import pair_bp
+from stockpair_yfinance import pairanalyze_bp
 
 app = Flask(__name__)
 
@@ -21,6 +22,8 @@ globalvaluemanagement.set_value('0', 0)
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(pair_bp, url_prefix='/pair')
 app.register_blueprint(order_bp, url_prefix='/order')
+app.register_blueprint(pairanalyze_bp, url_prefix='/pairanalyze')
+
 
 @app.route("/")
 def home():

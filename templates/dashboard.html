@@ -17,12 +17,12 @@
         <ul class="nav flex-column">
             <li class="nav-item">
 <!--                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Stock Pair</a>-->
-                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}">
-                    <i class="bi bi-cash-coin me-2"></i> Stock Pair
+                <a class="nav-link text-dark" href="{{ url_for('pairanalyze.analyze_pair_page') }}">
+                    <i class="bi bi-cash-coin me-2" ></i> Stock Pair
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
+                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Strategies</a>
