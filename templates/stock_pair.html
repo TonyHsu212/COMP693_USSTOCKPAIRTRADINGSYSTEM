@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="d-flex gap-3 vh-100">
+    <!-- Sidebar -->
+    <nav class="sidebar bg-light vh-120 p-3">
+        <div class="sidebar-header mb-4">
+            <h5>US Stock Pair Trading System</h5>
+        </div>
+        <form class="mb-3">
+            <input type="search" class="form-control" placeholder="Search...">
+        </form>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{ url_for('pairanalyze.analyze_pair_page') }}">
+                    <i class="bi bi-cash-coin me-2" ></i> Stock Pair
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Strategies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Backtest</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Risk Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Account Settle</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Trading Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Notifications</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-left me-2"></i> Logout</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="p-4 flex-grow-1 bg-light">
+        <body>
+            <h1>Stock Pair Analysis</h1>
+            <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm">
+                <label for="stock1">Stock Symbol 1:</label>
+                <input type="text" id="stock1" name="stock1" required><br><br>
+
+                <label for="stock2">Stock Symbol 2:</label>
+                <input type="text" id="stock2" name="stock2" required><br><br>
+
+                <label for="period">Period:</label>
+                <select id="period" name="period" required>
+                    <option value="1d">1 day</option>
+                    <option value="5d">5 day</option>
+                    <option value="1wk">1 week</option>
+                    <option value="1mo">1 month</option>
+                    <option value="3mo">3 month</option>
+                    <option value="6mo">6 month</option>
+                    <option value="1y">1 Year</option>
+                    <option value="2y">2 year</option>
+                    <option value="5y">5 year</option>
+                    <option value="1ytd">till now</option>
+                    <option value="max">Max</option>
+                </select><br><br>
+
+                <label for="interval">Interval:</label>
+                <select id="interval" name="interval" required>
+                    <option value="1m">1 min</option>
+                    <option value="2m">2 min</option>
+                    <option value="5m">5 min</option>
+                    <option value="15m">15 min</option>
+                    <option value="30m">30 min</option>
+                    <option value="60m">60 min</option>
+                    <option value="1d">1 Day</option>
+                    <option value="5d">5 day</option>
+                    <option value="1wk">1 week</option>
+                    <option value="1m">1 month</option>
+                </select><br><br>
+
+                <button type="submit" name="analyze">Analyze</button>
+            </form>
+
+            <h2>Analysis Results</h2>
+            <div id="results">
+                <p>Correlation: <span id="correlation">{{ result['correlation']}}</span></p>
+                <p>P-Value: <span id="pValue">{{ result['pValue'] }}</span></p>
+            </div>
+
+            <canvas id="spreadChart" width="800" height="400"></canvas>
+
+            <script>
+                async function stockPairMatch() {
+                    const stock1 = document.getElementById('stock1').value;
+                    const stock2 = document.getElementById('stock2').value;
+                    const period = document.getElementById('period').value;
+                    const interval = document.getElementById('interval').value;
+
+                    if (!stock1 || !stock2 || !period || !interval) {
+                        alert('Please fill out all fields.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`/analyze_stock_pair?stock1=${stock1}&stock2=${stock2}&period=${period}&interval=${interval}`);
+                        const data = await response.json();
+
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+
+                        document.getElementById('correlation').textContent = data.correlation.toFixed(4);
+                        document.getElementById('pValue').textContent = data.pValue.toFixed(4);
+
+                        renderSpreadChart(data.dates, data.spread);
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while fetching data.');
+                    }
+                }
+
+                function renderSpreadChart(dates, spread) {
+                    const ctx = document.getElementById('spreadChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: dates,
+                            datasets: [{
+                                label: 'Spread',
+                                data: spread,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: true }
+                            },
+                            scales: {
+                                x: { title: { display: true, text: 'Date' } },
+                                y: { title: { display: true, text: 'Spread' } }
+                            }
+                        }
+                    });
+                }
+            </script>
+        </body>
+    </main>
+</div>
+
+{% endblock %}
