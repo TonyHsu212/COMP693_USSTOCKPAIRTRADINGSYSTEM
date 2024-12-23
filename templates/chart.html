@@ -1,0 +1,341 @@
+
+<!--&lt;!&ndash; TradingView Widget BEGIN &ndash;&gt;-->
+<!--<div class="tradingview-widget-container" style="height:100%;width:100%">-->
+<!--  <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>-->
+<!--  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>-->
+<!--  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>-->
+<!--  {-->
+<!--  "autosize": true,-->
+<!--  "symbol": "NASDAQ:AAPL",-->
+<!--  "timezone": "Etc/UTC",-->
+<!--  "theme": "dark",-->
+<!--  "style": "1",-->
+<!--  "locale": "en",-->
+<!--  "withdateranges": true,-->
+<!--  "range": "YTD",-->
+<!--  "hide_side_toolbar": false,-->
+<!--  "allow_symbol_change": true,-->
+<!--  "watchlist": {{ data | safe }},-->
+<!--  "details": true,-->
+<!--  "hotlist": true,-->
+<!--  "calendar": false,-->
+<!--  "show_popup_button": true,-->
+<!--  "popup_width": "1000",-->
+<!--  "popup_height": "650",-->
+<!--  "support_host": "https://www.tradingview.com"-->
+<!--}-->
+<!--  </script>-->
+<!--</div>-->
+<!--&lt;!&ndash; TradingView Widget END &ndash;&gt;-->
+
+
+
+
+<!--&lt;!&ndash; TradingView Widget BEGIN &ndash;&gt;-->
+<!--<div class="tradingview-widget-container">-->
+<!--  <div class="tradingview-widget-container__widget"></div>-->
+<!--  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>-->
+<!--  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>-->
+<!--  {-->
+<!--  "symbols": [-->
+<!--    [-->
+<!--      "Apple",-->
+<!--      "AAPL|1D"-->
+<!--    ],-->
+<!--    [-->
+<!--      "Google",-->
+<!--      "GOOGL|1D"-->
+<!--    ],-->
+<!--    [-->
+<!--      "Microsoft",-->
+<!--      "MSFT|1D"-->
+<!--    ]-->
+<!--  ],-->
+<!--  "chartOnly": false,-->
+<!--  "width": "100%",-->
+<!--  "height": "100%",-->
+<!--  "locale": "en",-->
+<!--  "colorTheme": "dark",-->
+<!--  "autosize": true,-->
+<!--  "showVolume": false,-->
+<!--  "showMA": false,-->
+<!--  "hideDateRanges": false,-->
+<!--  "hideMarketStatus": false,-->
+<!--  "hideSymbolLogo": false,-->
+<!--  "scalePosition": "right",-->
+<!--  "scaleMode": "Normal",-->
+<!--  "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",-->
+<!--  "fontSize": "10",-->
+<!--  "noTimeScale": false,-->
+<!--  "valuesTracking": "1",-->
+<!--  "changeMode": "price-and-percent",-->
+<!--  "chartType": "area",-->
+<!--  "maLineColor": "#2962FF",-->
+<!--  "maLineWidth": 1,-->
+<!--  "maLength": 9,-->
+<!--  "headerFontSize": "medium",-->
+<!--  "lineWidth": 2,-->
+<!--  "lineType": 0,-->
+<!--  "dateRanges": [-->
+<!--    "1d|1",-->
+<!--    "1m|30",-->
+<!--    "3m|60",-->
+<!--    "12m|1D",-->
+<!--    "60m|1W",-->
+<!--    "all|1M"-->
+<!--  ]-->
+<!--}-->
+<!--  </script>-->
+<!--</div>-->
+<!--&lt;!&ndash; TradingView Widget END &ndash;&gt;-->
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Trading View Chart</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            background-color: #121212;-->
+<!--            color: #fff;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            text-align: center;-->
+<!--            margin: 20px 0;-->
+<!--            color: #4CAF50;-->
+<!--        }-->
+
+<!--        .content {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            align-items: center;-->
+<!--            padding: 20px;-->
+<!--        }-->
+
+<!--        .tradingview-widget-container {-->
+<!--            width: 100%;-->
+<!--            height: 500px;-->
+<!--        }-->
+
+<!--        .watchlist-container {-->
+<!--            width: 80%;-->
+<!--            margin: 20px auto;-->
+<!--            background: #1E1E1E;-->
+<!--            border-radius: 10px;-->
+<!--            padding: 20px;-->
+<!--        }-->
+
+<!--        .watchlist-container ul {-->
+<!--            list-style-type: none;-->
+<!--            padding: 0;-->
+<!--        }-->
+
+<!--        .watchlist-container li {-->
+<!--            padding: 10px;-->
+<!--            border-bottom: 1px solid #333;-->
+<!--            color: #fff;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--        .watchlist-container li:hover {-->
+<!--            background: #333;-->
+<!--        }-->
+
+<!--        .watchlist-container li:last-child {-->
+<!--            border-bottom: none;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>Trading View Chart</h1>-->
+<!--    <div class="content">-->
+<!--        &lt;!&ndash; TradingView Widget Container &ndash;&gt;-->
+<!--        <div class="tradingview-widget-container">-->
+<!--            <div id="tradingview-widget"></div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Watchlist Section &ndash;&gt;-->
+<!--        <div class="watchlist-container">-->
+<!--            <h2>Your Watchlist</h2>-->
+<!--            <ul id="watchlist">-->
+<!--                {% for item in watchlist %}-->
+<!--                    <li data-symbol="{{ item.symbol }}">{{ item.symbol }}</li>-->
+<!--                {% endfor %}-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <script src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js"></script>-->
+<!--    <script>-->
+<!--        document.addEventListener("DOMContentLoaded", function () {-->
+<!--            const watchlist = {{ watchlist | tojson | safe }};-->
+<!--            console.log("Watchlist:", watchlist);-->
+<!--            const tradingViewContainerId = "tradingview-widget";-->
+
+<!--            // Function to load the TradingView widget-->
+<!--            function loadChart(symbols) {-->
+<!--                const container = document.getElementById(tradingViewContainerId);-->
+<!--                container.innerHTML = ""; // Clear existing widget-->
+
+<!--                new TradingView.widget({-->
+<!--                    "symbols": symbols.map(symbol => [symbol, `${symbol}|1D`]),-->
+<!--                    "chartOnly": false,-->
+<!--                    "width": "100%",-->
+<!--                    "height": "500px",-->
+<!--                    "locale": "en",-->
+<!--                    "colorTheme": "dark",-->
+<!--                    "autosize": true,-->
+<!--                    "showVolume": false,-->
+<!--                    "scalePosition": "right",-->
+<!--                    "scaleMode": "Normal",-->
+<!--                    "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",-->
+<!--                    "fontSize": "10",-->
+<!--                    "container_id": tradingViewContainerId-->
+<!--                });-->
+<!--            }-->
+
+<!--            // Initialize with all watchlist symbols-->
+<!--            const symbols = watchlist.map(item => item.symbol);-->
+<!--            loadChart(symbols);-->
+
+<!--            // Event listener for watchlist item clicks-->
+<!--            document.getElementById("watchlist").addEventListener("click", function (event) {-->
+<!--                const target = event.target;-->
+<!--                if (target && target.dataset.symbol) {-->
+<!--                    const symbol = target.dataset.symbol;-->
+<!--                    loadChart([symbol]); // Load only the clicked symbol-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic TradingView Chart</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #4CAF50;
+        }
+
+        .watchlist {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .watchlist-item {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            color: #4CAF50;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .watchlist-item:hover {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        .tradingview-widget-container {
+            margin: 20px auto;
+            max-width: 100%;
+            height: 70vh;
+        }
+        #tradingview-widget-container {
+            height: 70vh; /* Adjust the height as a percentage of the viewport height */
+            width: 90%;
+        }
+
+        #tradingview-widget {
+            height: 100%; /* Ensure the widget fills the container */
+            width: 100%;
+        }
+
+        .tradingview-widget-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20 auto;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic TradingView Chart</h1>
+
+    <!-- Watchlist -->
+    <div class="watchlist">
+        {% for stock in watchlist %}
+            <div class="watchlist-item" data-symbol="{{ stock.symbol }}">
+                {{ stock.name }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- TradingView Widget -->
+    <div id="tradingview-widget-container" class="tradingview-widget-container">
+    <div id="tradingview-widget"></div>
+    </div>
+
+
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        // Function to create the TradingView widget
+        function createWidget(symbol) {
+            if (window.TradingView) {
+                new TradingView.widget({
+                    container_id: "tradingview-widget",
+                    autosize: true,
+                    symbol: symbol,
+                    timezone: "Etc/UTC",
+                    theme: "dark",
+                    style: "1",
+                    locale: "en",
+                    toolbar_bg: "#f1f3f6",
+                    enable_publishing: false,
+                    hide_top_toolbar: false,
+                    save_image: false,
+                    studies: [],
+                });
+            }
+        }
+
+        // Initialize with the first stock in the list
+        const firstSymbol = document.querySelector(".watchlist-item").dataset.symbol;
+        createWidget(firstSymbol);
+
+        // Event listener for watchlist clicks
+        document.querySelectorAll(".watchlist-item").forEach(item => {
+            item.addEventListener("click", () => {
+                const symbol = item.dataset.symbol;
+                document.getElementById("tradingview-widget").innerHTML = ""; // Clear existing widget
+                createWidget(symbol);
+            });
+        });
+    </script>
+</body>
+</html>
