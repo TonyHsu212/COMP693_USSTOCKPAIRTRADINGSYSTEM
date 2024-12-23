@@ -62,3 +62,6 @@ body1 {
     padding: 16px;
 }
 
+.custom-sidebar {
+    margin-left: -100px; /* Move the sidebar 10px to the left */
+}
