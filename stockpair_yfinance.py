@@ -66,25 +66,8 @@ def analyze_stock_pair():
                 "spread": spread.tolist(),
             }
             # After processing the result
-
-            # # Create a Matplotlib figure
-            # fig = Figure()
-            # ax = fig.add_subplot(1, 1, 1)
-            # ax.plot(combined_data.index, spread, label='Spread', color='blue')
-            # ax.set_title(f"Spread ({stock1} - {stock2})")
-            # ax.set_xlabel('Date')
-            # ax.set_ylabel('Spread')
-            # ax.legend()
-            #
-            # # Convert the plot to a PNG image
-            # buf = io.BytesIO()
-            # fig.savefig(buf, format="png")
-            # buf.seek(0)
-            # img_data = base64.b64encode(buf.read()).decode('utf-8')
-            # buf.close()
-
             # Create a Matplotlib figure
-            new_height = 4 * 0.95  # Reduce height by 20%
+            new_height = 4 * 0.98  # Reduce height by 20%
             fig = Figure(figsize=(8, new_height))  # Adjusted the size for shrinking
             ax = fig.add_subplot(1, 1, 1)
             ax.plot(combined_data.index, spread, label='Spread', color='blue')
@@ -108,6 +91,7 @@ def analyze_stock_pair():
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+
 
 
 @pairanalyze_bp.route('/analyze_pair_page')

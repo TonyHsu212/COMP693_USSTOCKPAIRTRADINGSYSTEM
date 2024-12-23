@@ -5,9 +5,11 @@
 
 {% block content %}
 
-<div class="d-flex gap-3 vh-100">
+
+
+<div class="d-flex gap-3 vh-80" >
     <!-- Sidebar -->
-    <nav class="sidebar bg-light vh-120 p-3">
+    <nav class="sidebar custom-sidebar bg-light vh-1200 p-1 " >
         <div class="sidebar-header mb-4">
             <h5>US Stock Pair Trading System</h5>
         </div>
@@ -16,7 +18,6 @@
         </form>
         <ul class="nav flex-column">
             <li class="nav-item">
-<!--                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Stock Pair</a>-->
                 <a class="nav-link text-dark" href="{{ url_for('pairanalyze.analyze_pair_page') }}">
                     <i class="bi bi-cash-coin me-2" ></i> Stock Pair
                 </a>
@@ -25,7 +26,7 @@
                 <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Strategies</a>
+                <a class="nav-link text-dark" href="#" ><i class="bi bi-cash-coin me-2"></i> Strategies</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Backtest</a>
