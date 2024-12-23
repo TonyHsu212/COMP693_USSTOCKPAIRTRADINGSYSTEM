@@ -74,7 +74,7 @@ try:
     # accepted：The order is received，but not filled
 
     all_orders = client_trading.get_orders()
-    print("Retrieved all orders:", all_orders)
+    # print("Retrieved all orders:", all_orders)
 
     # Manually filter based on status if needed
     fill_orders = [order for order in all_orders if order.status == "Filled"]

@@ -3,12 +3,19 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-
+<style>
+    h2, p {
+        font-family: Arial, sans-serif; /* 替换为你需要的字体 */
+        font-size: 16px; /* 根据需求调整 */
+        font-weight: normal; /* 根据需求调整 */
+    }
+</style>
 <div class="d-flex gap-3 vh-100">
     <!-- Sidebar -->
     <nav class="sidebar bg-light vh-120 p-3">
         <div class="sidebar-header mb-4">
             <h5>US Stock Pair Trading System</h5>
+            <hr>
         </div>
         <form class="mb-3">
             <input type="search" class="form-control" placeholder="Search...">
@@ -48,46 +55,7 @@
 
     <main class="p-4 flex-grow-1 bg-light">
         <body>
-            <h1>Stock Pair Analysis</h1>
-<!--            <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm">-->
-<!--                <label for="stock1">Stock Symbol 1:</label>-->
-<!--                <input type="text" id="stock1" name="stock1" required><br><br>-->
-
-<!--                <label for="stock2">Stock Symbol 2:</label>-->
-<!--                <input type="text" id="stock2" name="stock2" required><br><br>-->
-
-<!--                <label for="period">Period:</label>-->
-<!--                <select id="period" name="period" required>-->
-<!--                    <option value="1d">1 day</option>-->
-<!--                    <option value="5d">5 day</option>-->
-<!--                    <option value="1wk">1 week</option>-->
-<!--                    <option value="1mo">1 month</option>-->
-<!--                    <option value="3mo">3 month</option>-->
-<!--                    <option value="6mo">6 month</option>-->
-<!--                    <option value="1y">1 Year</option>-->
-<!--                    <option value="2y">2 year</option>-->
-<!--                    <option value="5y">5 year</option>-->
-<!--                    <option value="1ytd">till now</option>-->
-<!--                    <option value="max">Max</option>-->
-<!--                </select><br><br>-->
-
-<!--                <label for="interval">Interval:</label>-->
-<!--                <select id="interval" name="interval" required>-->
-<!--                    <option value="1m">1 min</option>-->
-<!--                    <option value="2m">2 min</option>-->
-<!--                    <option value="5m">5 min</option>-->
-<!--                    <option value="15m">15 min</option>-->
-<!--                    <option value="30m">30 min</option>-->
-<!--                    <option value="60m">60 min</option>-->
-<!--                    <option value="1d">1 Day</option>-->
-<!--                    <option value="5d">5 day</option>-->
-<!--                    <option value="1wk">1 week</option>-->
-<!--                    <option value="1m">1 month</option>-->
-<!--                </select><br><br>-->
-
-<!--                <button type="submit" name="analyze">Analyze</button>-->
-<!--            </form>-->
-
+            <h4>Stock Pair Analysis</h4>
             <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm" class="d-flex flex-wrap gap-3 align-items-center">
                 <!-- First Row -->
                 <div class="d-flex gap-3 flex-wrap">
@@ -134,34 +102,39 @@
                 <!-- Second Row -->
                 <div class="d-flex gap-3 flex-wrap">
                     <div class="align-self-end">
-                        <button type="submit" name="analyze" class="btn btn-primary">Analyze</button>
+                        <button type="submit" name="analyze" class="btn btn-outline-primary ms-1">Analyze</button>
                     </div>
                 </div>
             </form>
-
-
-<!--            <h2>Analysis Results</h2>-->
-<!--            <p>Correlation: <span id="correlation">{{ result['correlation'] }}</span></p>-->
-<!--            <p>P-Value: <span id="pValue">{{ result['pValue'] }}</span></p>-->
-            <h2>Analysis Results</h2>
-            <div class="d-flex gap-3 align-items-center">
-                <p>Correlation: <span id="correlation">{{ result['correlation'] }}</span></p>
-                <p>P-Value: <span id="pValue">{{ result['pValue'] }}</span></p>
+            <hr>
+            <!-- Analysis Results -->
+            <div class="row g-3 align-items-center">
+                <div class="col-md-2"><p><strong>Analysis Results</strong></p></div>
+                <div class="col-md-2">
+                    <p>Correlation: <strong id="correlation">{{ result['correlation'] }}</strong></p>
+                </div>
+                <div class="col-md-2">
+                    <p>P-Value: <strong id="pValue">{{ result['pValue'] }}</strong></p>
+                </div>
             </div>
+            <hr>
 
-
-            <h3 class="mt-4">Spread Chart</h3>
             <div class="text-center">
                 {% if plot_data %}
                     <img src="data:image/png;base64,{{ plot_data }}" class="img-fluid" alt="Spread Chart">
                 {% else %}
-                    <p>No chart available.</p>
+                    {% if e %}}
+                        <p>e</p>
+                        {% else %}
+                            <p>No chart available.</p>
+                    {% endif %}
                 {% endif %}
             </div>
 
-
         </body>
     </main>
+
+
 </div>
 
 {% endblock %}

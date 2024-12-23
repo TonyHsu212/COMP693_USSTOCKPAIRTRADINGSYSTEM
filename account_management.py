@@ -29,7 +29,7 @@ def getCursor():
     password="801221789801", host="localhost", \
     database="tradingsystem", autocommit=True)
     dbconn = connection.cursor()
-    return dbconn
+    return dbconn, connection
 
 
 def hashing_password(password):
@@ -111,7 +111,7 @@ def register():
 @auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
     account_state: str = ''
-    connection = getCursor()
+    conn = getCursor()
     # print('login')
     if request.method == 'POST':
         # print('post')
@@ -126,6 +126,8 @@ def login():
             msg2 = 'please input your password !'
             # print(msg)
             return render_template('registerlogin.html', msg2=msg2)
+
+        connection = conn[0]
 
         connection.execute('select * from User where username = %s', (user_name, ))
         account_user = connection.fetchone()
