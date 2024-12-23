@@ -7,92 +7,224 @@
 {% block content %}
 
 
-<div class="container mt-4">
-    <h1 class="mb-4" align="center" style="color: #007bff; font-size: 2.5rem;">Stock Pairs Analysis</h1>
-    <hr>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Stock Code 1</th>
-                <th>Stock Code 2</th>
-                <th>Correlation</th>
-                <th>P-Value</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for pairs in stock_pairs %}
-            <tr>
-                <td>{{ pairs[0] }}</td>
-                <td>{{ pairs[1] }}</td>
-                <td>{{ pairs[2] }}</td>
-                <td>{{ pairs[3] }}</td>
-                <td>
-                    <button type="button" class="btn btn-outline-primary ms-1" data-bs-toggle="modal" data-bs-target="#viewModal-{{ loop.index }}">View</button>
-                    <!-- Modal -->
-                    <div class="modal fade" id="viewModal-{{ loop.index }}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" align="center">US Stock Pairs Trading</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <section>
-                                        <div class="col-md-12">
-                                            <div class="col-12 col-lg-9 col-xl-7 w-full mx-auto my-4">
-                                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-                                                    <div class="card-body p-4 p-md-5">
-<!--                                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5" align="center">US Stock Pairs Trading</h3>-->
-                                                        <form action="{{ url_for('order.order_buy_pair') }}" method="POST">
-                                                            <div class="row">
-                                                                <div class="col-md-6 mb-4 pb-2">
-                                                                    <div class="form-outline">
-                                                                        <label class="form-label">Stock1 Code</label>
-                                                                        <input type="text" name="stock_code1" class="form-control form-control-lg" value="{{ pairs[0] }}" readonly>
+<!--<div class="container mt-4">-->
+<!--    <h1 class="mb-4" align="center" style="color: #007bff; font-size: 2.5rem;">Stock Pairs Analysis</h1>-->
+<!--    <hr>-->
+<!--    <table class="table table-striped">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>Stock Code 1</th>-->
+<!--                <th>Stock Code 2</th>-->
+<!--                <th>Correlation</th>-->
+<!--                <th>P-Value</th>-->
+<!--                <th>Action</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        {% for pairs in stock_pairs %}-->
+<!--            <tr>-->
+<!--                <td>{{ pairs[0] }}</td>-->
+<!--                <td>{{ pairs[1] }}</td>-->
+<!--                <td>{{ pairs[2] }}</td>-->
+<!--                <td>{{ pairs[3] }}</td>-->
+<!--                <td>-->
+<!--                    <button type="button" class="btn btn-outline-primary ms-1" data-bs-toggle="modal" data-bs-target="#viewModal-{{ loop.index }}">View</button>-->
+<!--                    &lt;!&ndash; Modal &ndash;&gt;-->
+<!--                    <div class="modal fade" id="viewModal-{{ loop.index }}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">-->
+<!--                        <div class="modal-dialog modal-lg">-->
+<!--                            <div class="modal-content">-->
+<!--                                <div class="modal-header">-->
+<!--                                    <h4 class="modal-title" align="center">US Stock Pairs Trading</h4>-->
+<!--                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                                </div>-->
+<!--                                <div class="modal-body">-->
+<!--                                    <section>-->
+<!--                                        <div class="col-md-12">-->
+<!--                                            <div class="col-12 col-lg-9 col-xl-7 w-full mx-auto my-4">-->
+<!--                                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">-->
+<!--                                                    <div class="card-body p-4 p-md-5">-->
+<!--&lt;!&ndash;                                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5" align="center">US Stock Pairs Trading</h3>&ndash;&gt;-->
+<!--                                                        <form action="{{ url_for('order.order_buy_pair') }}" method="POST">-->
+<!--                                                            <div class="row">-->
+<!--                                                                <div class="col-md-6 mb-4 pb-2">-->
+<!--                                                                    <div class="form-outline">-->
+<!--                                                                        <label class="form-label">Stock1 Code</label>-->
+<!--                                                                        <input type="text" name="stock_code1" class="form-control form-control-lg" value="{{ pairs[0] }}" readonly>-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
+<!--                                                                <div class="col-md-6 mb-4 pb-2">-->
+<!--                                                                    <div class="form-outline">-->
+<!--                                                                        <label class="form-label">Stock2 Code</label>-->
+<!--                                                                        <input type="text" name="stock_code2" class="form-control form-control-lg" value="{{ pairs[1] }}" readonly>-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
+<!--                                                                <div class="col-md-6 mb-4 pb-2">-->
+<!--                                                                    <div class="form-outline">-->
+<!--                                                                        <label class="form-label">Quantity for Stock1</label>-->
+<!--                                                                        <input type="number" name="quantity_stock1" class="form-control form-control-lg" placeholder="Enter quantity for Stock 1">-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
+<!--                                                                <div class="col-md-6 mb-4 pb-2">-->
+<!--                                                                    <div class="form-outline">-->
+<!--                                                                        <label class="form-label">Quantity for Stock2</label>-->
+<!--                                                                        <input type="number" name="quantity_stock2" class="form-control form-control-lg" placeholder="Enter quantity for Stock 2">-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="text-center mt-4">-->
+<!--                                                                <button class="btn btn-primary" type="submit" name="buy">Long</button>-->
+<!--                                                                <button class="btn btn-primary" type="submit" name="sell">Short</button>-->
+<!--                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>-->
+<!--                                                            </div>-->
+<!--                                                        </form>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </section>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        {% endfor %}-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+
+<div class="d-flex gap-3 vh-100">
+    <!-- Sidebar -->
+    <nav class="sidebar bg-light vh-120 p-3">
+        <div class="sidebar-header mb-4">
+            <h5>US Stock Pair Trading System</h5>
+            <hr>
+        </div>
+        <form class="mb-3">
+            <input type="search" class="form-control" placeholder="Search...">
+        </form>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{ url_for('pairanalyze.analyze_pair_page') }}">
+                    <i class="bi bi-cash-coin me-2" ></i> Stock Pair
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Strategies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Backtest</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Risk Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Account Settle</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Trading Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Notifications</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-left me-2"></i> Logout</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="p-4 flex-grow-1 bg-light" style="height: 100vh; overflow-y: auto;">
+        <div class="container mt-4">
+            <h1 class="mb-4" align="center" style="color: #007bff; font-size: 2.5rem;">Stock Pairs Analysis</h1>
+            <hr>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Stock Code 1</th>
+                        <th>Stock Code 2</th>
+                        <th>Correlation</th>
+                        <th>P-Value</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for pairs in stock_pairs %}
+                    <tr>
+                        <td>{{ pairs[0] }}</td>
+                        <td>{{ pairs[1] }}</td>
+                        <td>{{ pairs[2] }}</td>
+                        <td>{{ pairs[3] }}</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary ms-1" data-bs-toggle="modal" data-bs-target="#viewModal-{{ loop.index }}">View</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="viewModal-{{ loop.index }}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" align="center">US Stock Pairs Trading</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <section>
+                                                <div class="col-md-12">
+                                                    <div class="col-12 col-lg-9 col-xl-7 w-full mx-auto my-4">
+                                                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                                                            <div class="card-body p-4 p-md-5">
+        <!--                                                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5" align="center">US Stock Pairs Trading</h3>-->
+                                                                <form action="{{ url_for('order.order_buy_pair') }}" method="POST">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 mb-4 pb-2">
+                                                                            <div class="form-outline">
+                                                                                <label class="form-label">Stock1 Code</label>
+                                                                                <input type="text" name="stock_code1" class="form-control form-control-lg" value="{{ pairs[0] }}" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 mb-4 pb-2">
+                                                                            <div class="form-outline">
+                                                                                <label class="form-label">Stock2 Code</label>
+                                                                                <input type="text" name="stock_code2" class="form-control form-control-lg" value="{{ pairs[1] }}" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 mb-4 pb-2">
+                                                                            <div class="form-outline">
+                                                                                <label class="form-label">Quantity for Stock1</label>
+                                                                                <input type="number" name="quantity_stock1" class="form-control form-control-lg" placeholder="Enter quantity for Stock 1">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 mb-4 pb-2">
+                                                                            <div class="form-outline">
+                                                                                <label class="form-label">Quantity for Stock2</label>
+                                                                                <input type="number" name="quantity_stock2" class="form-control form-control-lg" placeholder="Enter quantity for Stock 2">
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-6 mb-4 pb-2">
-                                                                    <div class="form-outline">
-                                                                        <label class="form-label">Stock2 Code</label>
-                                                                        <input type="text" name="stock_code2" class="form-control form-control-lg" value="{{ pairs[1] }}" readonly>
+                                                                    <div class="text-center mt-4">
+                                                                        <button class="btn btn-primary" type="submit" name="buy">Long</button>
+                                                                        <button class="btn btn-primary" type="submit" name="sell">Short</button>
+                                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-6 mb-4 pb-2">
-                                                                    <div class="form-outline">
-                                                                        <label class="form-label">Quantity for Stock1</label>
-                                                                        <input type="number" name="quantity_stock1" class="form-control form-control-lg" placeholder="Enter quantity for Stock 1">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 mb-4 pb-2">
-                                                                    <div class="form-outline">
-                                                                        <label class="form-label">Quantity for Stock2</label>
-                                                                        <input type="number" name="quantity_stock2" class="form-control form-control-lg" placeholder="Enter quantity for Stock 2">
-                                                                    </div>
-                                                                </div>
+                                                                </form>
                                                             </div>
-                                                            <div class="text-center mt-4">
-                                                                <button class="btn btn-primary" type="submit" name="buy">Long</button>
-                                                                <button class="btn btn-primary" type="submit" name="sell">Short</button>
-                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                                            </div>
-                                                        </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </section>
                                         </div>
-                                    </section>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
 
+</div>
 
 
 {% endblock %}
