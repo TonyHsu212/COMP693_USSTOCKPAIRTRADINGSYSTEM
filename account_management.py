@@ -9,27 +9,41 @@ import globalvaluemanagement
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
 # ---- define dbconn and connection variables HERE ----
-dbconn = None
-connection = None
-# ---- PUT YOUR database user name HERE ----
-dbuser = "root"
-# ---- PUT YOUR PASSWORD HERE ----
-dbpass = "801221789801"
-# ---- PUT YOUR local host HERE ----
-dbhost = "localhost"
-dbport = "3306"
-# ---- PUT YOUR database name HERE ----
-dbname = "tradingsystem"
-
+# dbconn = None
+# connection = None
+# # ---- PUT YOUR database user name HERE ----
+# dbuser = "root"
+# # ---- PUT YOUR PASSWORD HERE ----
+# dbpass = "801221789801"
+# # ---- PUT YOUR local host HERE ----
+# dbhost = "localhost"
+# dbport = "3306"
+# # ---- PUT YOUR database name HERE ----
+# dbname = "tradingsystem"
 
 def getCursor():
     global dbconn
     global connection
-    connection = mysql.connector.connect(user="root",\
-    password="801221789801", host="localhost", \
-    database="tradingsystem", autocommit=True)
+    connection = mysql.connector.connect(user="xwm212",\
+    password="b1j2m3luohong6", host="xwm212.mysql.pythonanywhere-services.com", \
+    database="xwm212$usstockpairtradingsystem", autocommit=True)
     dbconn = connection.cursor()
-    return dbconn, connection
+    return dbconn
+
+# def getCursor():
+    # global dbconn
+    # global connection
+    # connection = mysql.connector.connect(user="root",\
+    # password="801221789801", host="localhost", \
+    # database="tradingsystem", autocommit=True)
+    # dbconn = connection.cursor()
+    # return dbconn, connection
+    # connection = mysql.connector.connect(user="root",\
+    # password="801221789801", host="localhost", \
+    # database="tradingsystem")
+    # dbconn = connection.cursor()
+    # return dbconn, connection
+
 
 
 def hashing_password(password):
