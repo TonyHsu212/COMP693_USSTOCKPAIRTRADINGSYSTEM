@@ -6,6 +6,7 @@ from account_management import auth_bp
 from chart import convertWatchlist
 from order import order_bp
 from stock_matching import pair_bp
+from stock_pair import allstock_bp
 from stockpair_yfinance import pairanalyze_bp
 
 app = Flask(__name__)
@@ -23,6 +24,7 @@ app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(pair_bp, url_prefix='/pair')
 app.register_blueprint(order_bp, url_prefix='/order')
 app.register_blueprint(pairanalyze_bp, url_prefix='/pairanalyze')
+app.register_blueprint(allstock_bp, url_prefix='/allstock')
 
 
 @app.route("/")
@@ -59,6 +61,10 @@ def chart():
         print(f"Serialization error: {e}")
         return "Error in watchlist data", 500
 
+
+@app.route("/all_stock")
+def all_stock():
+    return render_template("pairing_allstock.html")
 
 
 if __name__ == "__main__":
