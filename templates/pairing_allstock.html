@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pairing all stock</title>
+    <script>
+        function startTask() {
+            fetch('/allstock/start-task', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    const taskId = data.task_id;
+                    document.getElementById('status').innerText = "task starting...";
+                    pollStatus(taskId);
+                });
+        }
+
+        function pollStatus(taskId) {
+            const interval = setInterval(() => {
+                fetch(`/allstock/task-status/${taskId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "completed") {
+                            clearInterval(interval);
+                            document.getElementById('status').innerText = "tasks are completed！";
+                        } else {
+                            document.getElementById('status').innerText = `task processing: ${data.progress}%`;
+                        }
+                    });
+            }, 1000);
+        }
+    </script>
+</head>
+<body>
+    <button onclick="startTask()">Pairing all stock</button>
+    <p id="status">Click to start pairing</p>
+</body>
+</html>
