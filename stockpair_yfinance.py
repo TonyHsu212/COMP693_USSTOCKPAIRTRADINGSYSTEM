@@ -1,11 +1,17 @@
 import base64
 import io
-
-from flask import Flask, request, jsonify, Blueprint, render_template, redirect, url_for, get_flashed_messages
-import yfinance as yf
+from flask import request, jsonify, Blueprint, render_template, get_flashed_messages
+import alpaca_trade_api as tradeapi
 from matplotlib.figure import Figure
 from scipy.stats import pearsonr
 from flask import flash
+
+# Initialize Alpaca API client
+API_KEY = "your_api_key_here"
+API_SECRET = "your_api_secret_here"
+BASE_URL = "https://paper-api.alpaca.markets"  # Use live URL for live trading
+
+api = tradeapi.REST(API_KEY, API_SECRET, BASE_URL, api_version='v2')
 
 # Define the blueprint
 pairanalyze_bp = Blueprint('pairanalyze', __name__, template_folder='templates')
@@ -24,39 +30,43 @@ def analyze_stock_pair():
             period = request.form.get('period')  # Retrieve the period from the form
             interval = request.form.get('interval')  # Retrieve the interval from the form
 
-             # Debugging: Print the data to ensure it's correctly received
+            # Debugging: Print the data to ensure it's correctly received
             print(f"Stock1: {stock1}, Stock2: {stock2}, Period: {period}, Interval: {interval}")
 
             if not stock1 or not stock2 or not period or not interval:
                 return jsonify({"error": "All parameters (stock1, stock2, period, interval) are required."}), 400
 
-            # Fetch stock data using yfinance
-            data1 = yf.download(stock1, period=period, interval=interval)
-            print('data1', data1)
-            data2 = yf.download(stock2, period=period, interval=interval)
-            print('data2', data2)
+            # Fetch stock data using Alpaca
+            # Alpaca API supports historical data fetching via the get_barset method
+            barset1 = api.get_barset(stock1, interval, limit=1000)
+            barset2 = api.get_barset(stock2, interval, limit=1000)
 
-            if data1.empty or data2.empty:
+            # Check if data is available
+            if not barset1 or not barset2:
                 return jsonify({"error": "Unable to fetch stock data. Check stock symbols or parameters."}), 400
 
-            # Align both datasets by date
-            combined_data = data1[['Close']].join(data2[['Close']], lsuffix=f'_{stock1}', rsuffix=f'_{stock2}', how='inner')
-            # print('combined_data', combined_data)
-            print("Columns of combined_data:", combined_data.columns.tolist())
-            # Ensure the columns are correctly renamed (single-level column names)
-            combined_data.columns = [f'Close_{stock1}', f'Close_{stock2}']
-            print('Updated combined_data columns:', combined_data.columns.tolist())
-            combined_data.dropna(inplace=True)
+            data1 = barset1[stock1]
+            data2 = barset2[stock2]
+
+            # Convert the data to pandas DataFrame for easier manipulation
+            import pandas as pd
+            df1 = pd.DataFrame([{'timestamp': bar.t.timestamp(), 'close': bar.c} for bar in data1])
+            df2 = pd.DataFrame([{'timestamp': bar.t.timestamp(), 'close': bar.c} for bar in data2])
+
+            # Merge the dataframes on timestamp
+            df1['timestamp'] = pd.to_datetime(df1['timestamp'], unit='s')
+            df2['timestamp'] = pd.to_datetime(df2['timestamp'], unit='s')
+            df1.set_index('timestamp', inplace=True)
+            df2.set_index('timestamp', inplace=True)
+
+            combined_data = df1[['close']].join(df2[['close']], lsuffix=f'_{stock1}', rsuffix=f'_{stock2}', how='inner')
 
             # Calculate correlation and p-value
-            corr, p_value = pearsonr(combined_data[f'Close_{stock1}'], combined_data[f'Close_{stock2}'])
-            print('corr:', corr,  'p_value:', p_value)
+            corr, p_value = pearsonr(combined_data[f'close_{stock1}'], combined_data[f'close_{stock2}'])
             corr, p_value = round(float(corr), 3), round(float(p_value), 3)
-            print('corr:', corr,  'p_value:', p_value)
 
             # Calculate spread
-            spread = combined_data[f'Close_{stock1}'] - combined_data[f'Close_{stock2}']
-            print('spread', spread)
+            spread = combined_data[f'close_{stock1}'] - combined_data[f'close_{stock2}']
 
             # Prepare data for frontend
             result = {
@@ -65,7 +75,7 @@ def analyze_stock_pair():
                 "dates": combined_data.index.strftime('%Y-%m-%d').tolist(),
                 "spread": spread.tolist(),
             }
-            # After processing the result
+
             # Create a Matplotlib figure
             new_height = 4 * 0.98  # Reduce height by 20%
             fig = Figure(figsize=(8, new_height))  # Adjusted the size for shrinking
@@ -86,21 +96,17 @@ def analyze_stock_pair():
             buf.close()
 
             flash(result)
-            # return redirect(url_for('pairanalyze.analyze_pair_page'))
             return render_template('stock_pair.html', result=result, plot_data=img_data)
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
 
-
 @pairanalyze_bp.route('/analyze_pair_page')
 def analyze_pair_page():
     # Get the flashed messages
     result = get_flashed_messages()
-    print('')
     if not result:
         return render_template('stock_pair.html', result=result)
     else:
         return render_template('stock_pair.html')
-
