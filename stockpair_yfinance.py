@@ -306,7 +306,7 @@ def analyze_stock_pair():
         days = period_mapping[period]
         start_date = (now - datetime.timedelta(days=days)).strftime("%Y-%m-%d")
         end_date = now.strftime("%Y-%m-%d")
-        my_variable = f"now: {now}, days: {days}, start_date: {start_date}, end_date: {end_date}"
+        my_variable = f"now: {now}, days: {days}, start_date: {start_date}, end_date: {end_date}, period: {period}, interval: {interval}, stock1: {stock1}, stock2: {stock2}"
         print(f"now: {now}, days: {days}, start_date: {start_date}, end_date: {end_date}")
         print('-3-')
         # Open a file in write mode ('w')
