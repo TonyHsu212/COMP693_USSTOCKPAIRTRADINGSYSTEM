@@ -306,19 +306,27 @@ def analyze_stock_pair():
         days = period_mapping[period]
         start_date = (now - datetime.timedelta(days=days)).strftime("%Y-%m-%d")
         end_date = now.strftime("%Y-%m-%d")
+        my_variable = f"now: {now}, days: {days}, start_date: {start_date}, end_date: {end_date}"
         print(f"now: {now}, days: {days}, start_date: {start_date}, end_date: {end_date}")
         print('-3-')
+        # Open a file in write mode ('w')
+        with open("output.txt", "w") as file:
+            # Write the variable content to the file
+            file.write(my_variable)
 
-        # Fetch data from Alpaca
-        barset1 = api.get_bars(stock1, interval, start=start_date, end=end_date, feed="iex")
-        barset2 = api.get_bars(stock2, interval, start=start_date, end=end_date, feed="iex")
-        # barset1 = api.get_bars("AAPL", "1Min", start="2024-11-28", end="2024-12-29", feed="iex")
-        # barset2 = api.get_bars("MSFT", "1Min", start="2024-11-28", end="2024-12-29", feed="iex")
-        print('-4-')
-        # print('barset1', barset1)
+        try:
+            # Fetch data from Alpaca
+            barset1 = api.get_bars(stock1, interval, start=start_date, end=end_date, feed="iex")
+            barset2 = api.get_bars(stock2, interval, start=start_date, end=end_date, feed="iex")
+            # barset1 = api.get_bars("AAPL", "1Min", start="2024-11-28", end="2024-12-29", feed="iex")
+            # barset2 = api.get_bars("MSFT", "1Min", start="2024-11-28", end="2024-12-29", feed="iex")
+            print('-4-')
+            print('barset1', barset1)
+        except:
+            print("error: Unable to fetch stock data. Check stock symbols or parameters.")
 
         if not barset1 or not barset2:
-            print('-3-')
+            print('-5-')
             return jsonify({"error": "Unable to fetch stock data. Check stock symbols or parameters."}), 400
 
         # Create DataFrame
