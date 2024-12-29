@@ -67,6 +67,12 @@ def all_stock():
     return render_template("pairing_allstock.html")
 
 
+@app.route('/grid_strategy')
+def grid_strategy():
+    return render_template('grid_strategy.html')
+
+
 if __name__ == "__main__":
     app.run(port=7000)
+
 
