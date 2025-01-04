@@ -1,10 +1,31 @@
 
-{% extends "base.html" %}
+{% extends "dashboard.html" %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-
+<style>
+        table.table {
+            width: 65%;  /* Adjust the table width as needed (e.g., 80% of the parent container) */
+            margin: 20px auto;  /* Centers the table */
+            border-collapse: collapse;  /* Ensures borders are not doubled */
+        }
+        th, td {
+            padding: 15px;  /* Adjust padding to make the cells larger or smaller */
+            text-align: left;
+            border: 1px solid #ddd;  /* Table border */
+        }
+        th {
+            background-color: #f2f2f2;  /* Light gray background for header cells */
+        }
+        td {
+            font-size: 16px;  /* Adjust text size in the table cells */
+        }
+        h2 {
+            text-align: center;
+            font-size: 24px;  /* Change header font size */
+        }
+</style>
 
 
 <div class="d-flex gap-3 vh-80" >
@@ -122,41 +143,101 @@
         <nav class=" bg-light vh-80 p-3">
             <h2 align="center" style="color: #007bff; font-size: 2rem;">US Stock Pairs Trading System</h2>
             <hr>
-            <h3>hello, the {{file_name}} has been loading successfully!</h3>
-            <div></div>
-            <div class="row mt-5" >
-                <div class="col-8">
-                    <h3>what the next step do you hope to do?</h3>
-                </div>
+            <!-- First Table: Performance Metrics -->
+            <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Performance Metrics</h5>
             </div>
-            <div class="row">
-                <div class="col-2">
-                    <button>Trade</button>
-                </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Total Return</td>
+                        <td>{{ metrics['total_return'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Annual Return</td>
+                        <td>{{ metrics['annual_return'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Win Rate</td>
+                        <td>{{ metrics['win_rate'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Profit/Loss Ratio</td>
+                        <td>{{ metrics['profit_loss_ratio'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Trades</td>
+                        <td>{{ metrics['num_trades'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Alpha</td>
+                        <td>{{ metrics['alpha'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Beta</td>
+                        <td>{{ metrics['beta'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-                <a class="nav-link text-dark" href="/strategy" >
-                    <i class="bi bi-cash-coin me-2" ></i> {{file_name}}
-                </a>
+            <!-- Second Table: Risk Metrics -->
+            <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Risk Metrics</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Volatility</td>
+                        <td>{{ metrics['volatility'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Sharpe Ratio</td>
+                        <td>{{ metrics['sharpe_ratio'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Max Drawdown</td>
+                        <td>{{ metrics['max_drawdown'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Stability</td>
+                        <td>{{ metrics['stability'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Annual Volatility</td>
+                        <td>{{ metrics['annual_volatility'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-                <div class="col-2">
-                    <button>Backtest</button>
-                </div>
-                <div>
-                    <h3>Strategy Performance:</h3>
-<!--                    <img src="{{ plot_path }}" alt="Strategy Performance Plot" style="width: 100%; max-width: 800px;">-->
-                    <div class="text-center">
-                        {% if img_data %}
-                            <img src="data:image/png;base64,{{ img_data }}" class="img-fluid" alt="Spread Chart">
+            <!-- Strategy Performance Section -->
+            <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Returns Metrics</h3>
+                <div class="text-center">
+                    {% if img_data %}
+                        <img src="data:image/png;base64,{{ img_data }}" class="img-fluid" alt="Strategy Performance Chart">
+                    {% else %}
+                        {% if e %}
+                            <p>Error loading chart.</p>
                         {% else %}
-                            {% if e %}}
-                                <p>e</p>
-                                {% else %}
-                                    <p>No chart available.</p>
-                            {% endif %}
+                            <p>No chart available.</p>
                         {% endif %}
-                    </div>
+                    {% endif %}
                 </div>
             </div>
+        </div>
         </nav>
     </main>
 </div>
