@@ -1,6 +1,9 @@
+import importlib
 import json
 import os
-from flask import Flask, render_template, session
+
+import numpy as np
+from flask import Flask, render_template, session, jsonify, request
 import globalvaluemanagement
 from account_management import auth_bp
 from chart import convertWatchlist
@@ -8,6 +11,9 @@ from order import order_bp
 from stock_matching import pair_bp
 from stock_pair import allstock_bp
 from stockpair_yfinance import pairanalyze_bp
+from strategy1 import maxmindistance_strategy, maxmindistance_backtest
+from strategy3 import maxmindistance_strategy3
+from test import test_bp
 
 app = Flask(__name__)
 
@@ -25,6 +31,10 @@ app.register_blueprint(pair_bp, url_prefix='/pair')
 app.register_blueprint(order_bp, url_prefix='/order')
 app.register_blueprint(pairanalyze_bp, url_prefix='/pairanalyze')
 app.register_blueprint(allstock_bp, url_prefix='/allstock')
+app.register_blueprint(test_bp)
+app.register_blueprint(maxmindistance_strategy, url_prefix='/')
+app.register_blueprint(maxmindistance_strategy3)
+app.register_blueprint(maxmindistance_backtest, url_prefix='/')
 
 
 @app.route("/")
@@ -72,7 +82,13 @@ def grid_strategy():
     return render_template('grid_strategy.html')
 
 
+@app.route('/filename/<file_name>')
+def filename(file_name):
+    print('filename')
+    return render_template('strategy_file.html', file_name=file_name)
+
+
 if __name__ == "__main__":
-    app.run(port=7000)
+    app.run(host='127.0.0.1', port=7000, debug=True)
 
 
