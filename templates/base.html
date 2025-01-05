@@ -29,7 +29,34 @@
         footer {
             background-color: #f8f9fa;
         }
+
+        .scrolling-text {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            width: 100%; /* Adjust based on desired space */
+        }
+
+        .scrolling-text a {
+            display: inline-block;
+            padding-left: 10%; /* Push the text off-screen initially */
+            animation: scroll 5s linear infinite; /* Adjust duration as needed */
+            text-decoration: none;
+            color: #007bff;
+            font-size: 2rem;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
     </style>
+
 </head>
 <body>
     <div class="wrapper">
@@ -42,7 +69,14 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/" style="color: #007bff; font-size: 1rem;">USPTS Home</a>
+                            <div class="scrolling-text">
+                                <a href="/">US Stock Pair Trading System</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/" style="color: #007bff; font-size: 1rem;">Home</a>
                         </li>
                         {% if session.get('user_name') %}
                         <li class="nav-item">
