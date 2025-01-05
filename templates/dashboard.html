@@ -21,19 +21,17 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link text-dark" href="{{ url_for('pairanalyze.analyze_pair_page') }}" >
-                    <i class="bi bi-cash-coin me-2" ></i> Stock Pair
+                    <i class="bi bi-cash-coin me-2" ></i> Stock Pairs Analysis
                 </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/grid_strategy" ><i class="bi bi-cash-coin me-2"></i> Strategies</a>
+                <a class="nav-link text-dark" href="/grid_strategy" ><i class="bi bi-cash-coin me-2"></i>Explore Strategies</a>
             </li>
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-dark" href="#" id="strategiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-cash-coin me-2"></i> Strategies
+                    <i class="bi bi-cash-coin me-2"></i> Backtest Strategies
                 </a>
                 <ul class="dropdown-menu" id="strategiesMenu" aria-labelledby="strategiesDropdown">
                     <li><a class="dropdown-item" href="{{url_for('strategy.strategy1')}}">strategy1</a></li>
@@ -47,7 +45,7 @@
                 </ul>
             </li>
 
-           <script>
+            <script>
                 let i = 0; // Initialize counter
 
                 document.getElementById("fileButton").addEventListener("click", function () {
@@ -91,16 +89,17 @@
 
 
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Backtest</a>
+                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pairs Trading</a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Risk Management</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Account Settle</a>
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Account Settles</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Trading Detail</a>
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Order Details</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Notifications</a>
