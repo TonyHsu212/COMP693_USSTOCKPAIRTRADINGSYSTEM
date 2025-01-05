@@ -21,26 +21,85 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link text-dark" href="{{ url_for('pairanalyze.analyze_pair_page') }}" >
-                    <i class="bi bi-cash-coin me-2" ></i> Stock Pair
+                    <i class="bi bi-cash-coin me-2" ></i> Stock Pairs Analysis
                 </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pair Trading</a>
+                <a class="nav-link text-dark" href="/grid_strategy" ><i class="bi bi-cash-coin me-2"></i>Explore Strategies</a>
             </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="strategiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-cash-coin me-2"></i> Backtest Strategies
+                </a>
+                <ul class="dropdown-menu" id="strategiesMenu" aria-labelledby="strategiesDropdown">
+                    <li><a class="dropdown-item" href="{{url_for('strategy.strategy1')}}">strategy1</a></li>
+                    <li><a class="dropdown-item" href="#">strategy2</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/yet_another_strategy">Yet Another Strategy</a></li>
+                    <li>
+                        <button id="fileButton" class="dropdown-item text-primary">Add More Strategy</button>
+                        <input type="file" id="fileInput" style="display: none;">
+                    </li>
+                </ul>
+            </li>
+
+            <script>
+                let i = 0; // Initialize counter
+
+                document.getElementById("fileButton").addEventListener("click", function () {
+                    // Increment the counter on button click
+                    i += 1;
+
+                    // Trigger the hidden file input
+                    document.getElementById("fileInput").click();
+                });
+
+                document.getElementById("fileInput").addEventListener("change", function (event) {
+                    const file = event.target.files[0];
+
+                    if (file) {
+                        const strategiesMenu = document.getElementById("strategiesMenu");
+
+                        // Extract the file name without the extension
+                        const fileName = file.name.split(".").slice(0, -1).join(".");
+
+                        // Create a new list item
+                        const newItem = document.createElement("li");
+                        const newLink = document.createElement("a");
+
+                        // Set attributes and content for the new link
+                        newLink.className = "dropdown-item";
+
+                        // Dynamically set the href with the selected file name
+                        newLink.href = `/filename/${encodeURIComponent(fileName)}`;
+
+                        // Set the link text to the file name
+                        newLink.textContent = fileName;
+
+                        // Append the new link to the list item
+                        newItem.appendChild(newLink);
+
+                        // Insert the new list item above the "Add More Strategy" button
+                        strategiesMenu.insertBefore(newItem, strategiesMenu.lastElementChild);
+                    }
+                });
+            </script>
+
+
             <li class="nav-item">
-                <a class="nav-link text-dark" href="/grid_strategy" ><i class="bi bi-cash-coin me-2"></i> Strategies</a>
+                <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pairs Trading</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Backtest</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Risk Management</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Account Settle</a>
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Account Settles</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Trading Detail</a>
+                <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Order Details</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#"><i class="bi bi-cash-coin me-2"></i> Notifications</a>
@@ -56,6 +115,7 @@
 <!--            </li>-->
         </ul>
     </nav>
+
 
     <!-- Main Content -->
     <main class="p-4 flex-grow-1 bg-light">
