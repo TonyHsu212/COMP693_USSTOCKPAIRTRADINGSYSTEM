@@ -30,7 +30,7 @@ app.register_blueprint(pair_bp, url_prefix='/pair')
 app.register_blueprint(order_bp, url_prefix='/order')
 app.register_blueprint(pairanalyze_bp, url_prefix='/pairanalyze')
 app.register_blueprint(allstock_bp, url_prefix='/allstock')
-app.register_blueprint(test_bp)
+app.register_blueprint(test_bp, url_prefix='/')
 app.register_blueprint(maxmindistance_strategy, url_prefix='/')
 app.register_blueprint(maxmindistance_backtest, url_prefix='/')
 
