@@ -12,7 +12,6 @@ from stock_matching import pair_bp
 from stock_pair import allstock_bp
 from stockpair_yfinance import pairanalyze_bp
 from strategy1 import maxmindistance_strategy, maxmindistance_backtest
-from strategy3 import maxmindistance_strategy3
 from test import test_bp
 
 app = Flask(__name__)
