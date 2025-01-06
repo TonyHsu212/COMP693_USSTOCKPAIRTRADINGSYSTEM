@@ -21,16 +21,17 @@ auth_bp = Blueprint('auth', __name__, template_folder='templates')
 # # ---- PUT YOUR database name HERE ----
 # dbname = "tradingsystem"
 
-def getCursor():
-    global dbconn
-    global connection
-    connection = mysql.connector.connect(user="xwm212",\
-    password="b1j2m3luohong6", host="xwm212.mysql.pythonanywhere-services.com", \
-    database="xwm212$usstockpairtradingsystem", autocommit=True)
-    dbconn = connection.cursor()
-    return dbconn
-
 # def getCursor():
+#     global dbconn
+#     global connection
+#     connection = mysql.connector.connect(user="xwm212",\
+#     password="b1j2m3luohong6", host="xwm212.mysql.pythonanywhere-services.com", \
+#     database="xwm212$usstockpairtradingsystem", autocommit=True)
+#     dbconn = connection.cursor()
+#     return dbconn
+
+
+def getCursor():
     # global dbconn
     # global connection
     # connection = mysql.connector.connect(user="root",\
@@ -38,12 +39,11 @@ def getCursor():
     # database="tradingsystem", autocommit=True)
     # dbconn = connection.cursor()
     # return dbconn, connection
-    # connection = mysql.connector.connect(user="root",\
-    # password="801221789801", host="localhost", \
-    # database="tradingsystem")
-    # dbconn = connection.cursor()
-    # return dbconn, connection
-
+    connection = mysql.connector.connect(user="root",\
+    password="801221789801", host="localhost", \
+    database="tradingsystem")
+    dbconn = connection.cursor()
+    return dbconn, connection
 
 
 def hashing_password(password):
@@ -67,7 +67,7 @@ def register_login():
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     # print('register')
-    connection = getCursor()
+    conn = getCursor()
     if request.method == 'POST':
         user_name = request.form.get('userName')
         # print(user_name)
@@ -82,6 +82,8 @@ def register():
         userType = request.form.get('userType')
         # print(userType)
         accountState = 'Active'
+
+        connection = conn[0]
 
         connection.execute('select * from User where username = %s', (user_name, ))
         account_username = connection.fetchall()
@@ -124,6 +126,8 @@ def register():
 
 @auth_bp.route('/login', methods=['POST', 'GET'])
 def login():
+    from accountinfo import accountinfo
+    accountinfo = accountinfo()
     account_state: str = ''
     conn = getCursor()
     # print('login')
@@ -181,7 +185,7 @@ def login():
                     connection.execute('select * from User where UserID = %s', (id, ))
                     account_info = connection.fetchone()
                     # account_info_new = list(account_info)
-                    return render_template('dashboard.html', user_name=user_name)
+                    return render_template('dashboard.html', user_name=user_name, accountinfo=accountinfo)
                 else:
                     msg2 = 'no account found.'
                     return render_template('registerlogin.html', msg2=msg2)
@@ -209,6 +213,7 @@ def login():
             msg2 = 'please input your password!'
             return render_template('registerlogin.html', msg2=msg2)
         msg2 = 'no account found.'
+
     return render_template('registerlogin.html', msg2=msg2)
 
 
