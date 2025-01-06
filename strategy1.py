@@ -443,8 +443,8 @@ def strategy1():
 
         # Step 8: Render the Results
         # Render the HTML template and pass the image data
-        # return render_template('strategy1.html', best_pair=best_pair, min_distance=min_distance, img_data=img_data)
-        return render_template('strategy1.html', metrics=metrics, img_data=img_data)
+        # return render_template('backtest_strategy1.html', best_pair=best_pair, min_distance=min_distance, img_data=img_data)
+        return render_template('backtest_strategy1.html', metrics=metrics, img_data=img_data)
 
     except Exception as e:
         print(f"An error occurred: {e}")
