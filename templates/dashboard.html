@@ -4,7 +4,21 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-
+<style>
+    table {
+        width: 50%;
+        margin: 20px auto;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+    th {
+        background-color: #f4f4f4;
+    }
+</style>
 
 
 <div class="d-flex gap-3 vh-80" >
@@ -130,11 +144,44 @@
     <!-- Main Content -->
     <main class="p-4 flex-grow-1 bg-light">
         <nav class=" bg-light vh-80 p-3">
-<!--            <h1>Dashboard Sidebar</h1>-->
-<!--            <p>Welcome to the dashboard!</p>-->
-<!--            <p>Welcome to the dashboard!</p>-->
-            <h2 align="center" style="color: #007bff; font-size: 2rem;">US Stock Pairs Trading System</h2>
+            <h2 align="center" style="color: #007bff; font-size: 2rem;">{{user_name}} {{' '}}Account Information</h2>
             <hr>
+            <body>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Account ID</td>
+                            <td>{{ accountinfo.id }}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>{{ accountinfo.status }}</td>
+                        </tr>
+                        <tr>
+                            <td>Equity</td>
+                            <td>{{ accountinfo.equity }}</td>
+                        </tr>
+                        <tr>
+                            <td>Cash</td>
+                            <td>{{ accountinfo.cash }}</td>
+                        </tr>
+                        <tr>
+                            <td>Initial Margin</td>
+                            <td>{{ accountinfo.initial_margin }}</td>
+                        </tr>
+                        <tr>
+                            <td>Maintenance Margin</td>
+                            <td>{{ accountinfo.maintenance_margin }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </body>
         </nav>
     </main>
 </div>
