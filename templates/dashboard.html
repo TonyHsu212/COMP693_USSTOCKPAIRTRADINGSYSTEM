@@ -25,22 +25,32 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/grid_strategy" ><i class="bi bi-cash-coin me-2"></i>Explore Strategies</a>
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link text-dark" href="/grid_strategy" ><i class="bi bi-cash-coin me-2"></i>Explore Strategies</a>-->
+<!--            </li>-->
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="explorestrategiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-cash-coin me-2"></i> Explore Strategies
+                </a>
+                <ul class="dropdown-menu" id="explorestrategiesMenu" aria-labelledby="explorestrategiesDropdown">
+                    <li><a class="dropdown-item" href="#">minimum distance strategy</a></li>
+                    <li><a class="dropdown-item" href="/grid_strategy">grid strategy</a></li>
+                </ul>
             </li>
 
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-dark" href="#" id="strategiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="backteststrategiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-cash-coin me-2"></i> Backtest Strategies
                 </a>
-                <ul class="dropdown-menu" id="strategiesMenu" aria-labelledby="strategiesDropdown">
-                    <li><a class="dropdown-item" href="{{url_for('strategy.strategy1')}}">strategy1</a></li>
-                    <li><a class="dropdown-item" href="#">strategy2</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="/yet_another_strategy">Yet Another Strategy</a></li>
-                    <li>
-                        <button id="fileButton" class="dropdown-item text-primary">Add More Strategy</button>
-                        <input type="file" id="fileInput" style="display: none;">
+                <ul class="dropdown-menu" id="backteststrategiesMenu" aria-labelledby="backteststrategiesDropdown">
+                    <li><a class="dropdown-item" href="{{url_for('strategy.strategy1')}}">minimum distance strategy</a></li>
+                    <li><a class="dropdown-item" href="#">grid strategy</a></li>
+<!--                    <li><hr class="dropdown-divider"></li>-->
+<!--&lt;!&ndash;                    <li><a class="dropdown-item" href="/yet_another_strategy">Yet Another Strategy</a></li>&ndash;&gt;-->
+<!--                    <li>-->
+<!--                        <button id="addfileButton" class="dropdown-item text-primary">Add More Strategy</button>-->
+<!--                        <input type="file" id="addfileInput" style="display: none;">-->
                     </li>
                 </ul>
             </li>
