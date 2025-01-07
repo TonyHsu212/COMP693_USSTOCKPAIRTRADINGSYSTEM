@@ -3,7 +3,7 @@ import json
 import os
 
 import numpy as np
-from flask import Flask, render_template, session, jsonify, request
+from flask import Flask, render_template, session, jsonify, request, redirect, url_for
 import globalvaluemanagement
 from account_management import auth_bp
 from chart import convertWatchlist
@@ -43,7 +43,8 @@ def home():
 @app.route("/dashboard")
 def dashboard():
     if session.get('user_name'):
-        return render_template("dashboard.html")
+        # return render_template("dashboard.html")
+        return redirect(url_for('auth.login'))
     else:
         return render_template("registerlogin.html")
 
