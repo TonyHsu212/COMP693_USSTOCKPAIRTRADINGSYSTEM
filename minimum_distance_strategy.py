@@ -145,7 +145,6 @@ def cumulative_returns(stock1, stock2, signals):
     return returns, total_returns
 
 
-
 # Step 7: Calculate performance metrics for backtest
 def backtest(returns, total_returns):
     import numpy as np
