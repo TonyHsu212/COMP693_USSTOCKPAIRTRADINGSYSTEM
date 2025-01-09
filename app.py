@@ -11,7 +11,7 @@ from order import order_bp
 from stock_matching import pair_bp
 from stock_pair import allstock_bp
 from stockpair_yfinance import pairanalyze_bp
-from strategy1 import maxmindistance_strategy, maxmindistance_backtest
+from minimum_distance_strategy import maxmindistance_strategy, maxmindistance_backtest, minimumdistance_bp
 from test_strategy import test_bp
 
 app = Flask(__name__)
@@ -33,6 +33,7 @@ app.register_blueprint(allstock_bp, url_prefix='/allstock')
 app.register_blueprint(test_bp, url_prefix='/')
 app.register_blueprint(maxmindistance_strategy, url_prefix='/')
 app.register_blueprint(maxmindistance_backtest, url_prefix='/')
+app.register_blueprint(minimumdistance_bp, url_prefix='/')
 
 
 @app.route("/")

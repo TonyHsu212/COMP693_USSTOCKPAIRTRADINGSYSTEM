@@ -9,6 +9,7 @@ from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
 import pandas as pd
 import numpy as np
+from flask import Blueprint, request, render_template
 
 # Alpaca API credentials
 API_KEY = 'PK30X482MH0Y5RX80FPR'
@@ -18,6 +19,11 @@ API_SECRET = 'LJif4LRSDC4BLhu3EprXOvzcaSc5Y9dp3W8Afano'
 maxmindistance_strategy = Blueprint('strategy', __name__, template_folder='templates')
 maxmindistance_backtest = Blueprint('backtest', __name__, template_folder='templates')
 
+# Create a blueprint for minimumdistance
+minimumdistance_bp = Blueprint('minimumdistance', __name__, template_folder='templates')
+# Obtain the optimal pairs
+pairs_info = {}
+pairs_list = []
 
 # Step 1: Get stock data
 # def get_data(tickers, start, end):
@@ -38,6 +44,7 @@ def get_data(tickers, start, end):
 
     # Fetch data
     bars = client.get_stock_bars(request_params)
+    # print('get_data-tickers', tickers, 'get_data-bars', bars)
 
     # Convert to DataFrame and filter only adjusted close prices
     df = bars.df  # Access the resulting DataFrame
@@ -189,26 +196,30 @@ def backtest(returns, total_returns):
     # print('cumulative_returns', cumulative_returns, 'cumulative_returns type', type(cumulative_returns))
     # cumulative_returns as a numpy array
     cumulative_returns = np.array(cumulative_returns)
-
     # Convert to pandas Series
     cumulative_returns_series = pd.Series(cumulative_returns)
+    daily_returns = pd.Series(cumulative_returns).pct_change().dropna()
 
     # Calculate daily returns and drop NaN values
-    daily_returns = cumulative_returns_series.pct_change().dropna()
+    # daily_returns = cumulative_returns_series.pct_change().dropna()
+    # Replace invalid values
+    daily_returns = daily_returns.replace([np.inf, -np.inf], np.nan).dropna()
     daily_returns = daily_returns[1:]
-    # print('daily_returns', daily_returns)
+    print('daily_returns', daily_returns)
     if daily_returns.empty or daily_returns.isna().all():
         # print("Error: No valid daily returns data.")
         annual_volatility = None
     else:
         # Calculate annual volatility
-        annual_volatility = daily_returns.std() * (252 ** 0.5)
+        # annual_volatility = daily_returns.std() * (252 ** 0.5)
+        annual_volatility = daily_returns.std() * np.sqrt(252)
         if isinstance(annual_volatility, np.ndarray):
             annual_volatility = np.round(annual_volatility, 2)
         else:
             annual_volatility = round(annual_volatility, 2)
 
-    # print('annual_volatility', daily_returns.std())
+    print('annual_volatility', daily_returns.std())
+    print('annual_volatility', annual_volatility)
 
     # Win ratio: The percentage of earnings signals counted in Signals
     # win_rate = sum(signals['profit'] > 0) / len(signals)
@@ -260,8 +271,10 @@ def backtest(returns, total_returns):
 
     # Parameters
     benchmark_ticker = "SPY"  # SPY ETF as a proxy for S&P 500
-    start_date = "2020-01-01"
-    end_date = "2023-01-01"
+    # start_date = "2020-01-01"
+    # end_date = "2023-01-01"
+    start_date = pairs_info['start_date']
+    end_date = pairs_info['end_date']
 
     # Fetch benchmark data
     request_params = StockBarsRequest(
@@ -295,7 +308,18 @@ def backtest(returns, total_returns):
     # Replace these with actual data
     # daily_returns = strategy_returns / strategy_initial_investment
     # daily_returns = np.random.normal(0, 0.01, len(benchmark_daily_returns))  # Replace with actual daily returns
-    total_return = np.sum(daily_returns)  # Replace with actual total return
+    # total_return = np.sum(daily_returns)  # Replace with actual total return
+    # Clean up data
+    daily_returns = np.nan_to_num(daily_returns, nan=0.0, posinf=0.0, neginf=0.0)
+    daily_returns = np.clip(daily_returns, -0.99, 0.99)  # Avoid values less than -1
+
+    # Calculate total and cumulative return
+    total_return = np.sum(daily_returns)
+    cumulative_return = np.prod(1 + daily_returns) - 1
+
+    print(f"Total Return: {total_return}")
+    print(f"Cumulative Return: {cumulative_return}")
+    print('total_return', total_return)
     if isinstance(total_return, np.ndarray):
         total_return = np.round(total_return, 2)
     else:
@@ -307,6 +331,8 @@ def backtest(returns, total_returns):
         alpha = np.round(alpha, 2)
     else:
         alpha = round(alpha, 2)
+
+    # print('backtest-alpha', alpha)
 
     # Beta: Covariance of strategy returns with benchmark returns
     # print('daily_returns', daily_returns, 'benchmark_daily_returns', benchmark_daily_returns, 'benchmark_daily_returns', benchmark_daily_returns)
@@ -384,9 +410,16 @@ def backtest(returns, total_returns):
 def strategy1():
     try:
         # Step 1: Define Parameters
-        tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN']  # List of tickers
-        start_date = '2020-01-01'
-        end_date = '2023-01-01'
+        # tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN']  # List of tickers
+        # start_date = '2020-01-01'
+        # end_date = '2023-01-01'
+        tickers = pairs_info['pairs_list']
+        print('strategy1-tickers', tickers)
+        if len(tickers) <= 1:
+            return
+        start_date = pairs_info['start_date']
+        end_date = pairs_info['end_date']
+        print('start_date', start_date, 'end_date', end_date)
         formation_period = 252  # Formation period (1 year)
         trading_period = 252  # Trading period (1 year)
         window_size = 30  # Rolling window size
@@ -394,7 +427,7 @@ def strategy1():
 
         # Step 2: Fetch Stock Data
         data = get_data(tickers, start=start_date, end=end_date)
-        # print('data', data)
+        print('strategy1-data', data)
         if data.empty:
             return render_template('error.html', message="Failed to retrieve stock data.")
 
@@ -403,10 +436,20 @@ def strategy1():
         print(f"Best pair: {best_pair}, Minimum distance: {min_distance}")
 
         # Step 4: Extract Trading Data for the Pair
-        stock1 = data[best_pair[0]].iloc[formation_period:formation_period + trading_period]
-        # print('stock1', stock1)
-        stock2 = data[best_pair[1]].iloc[formation_period:formation_period + trading_period]
-        # print('stock2', stock2)
+        # print('length of best_pair[0]', len(best_pair[0]))
+        # stock1 = data[best_pair[0]].iloc[formation_period:formation_period + trading_period]
+        # # print('stock1', stock1)
+        # print('length of best_pair[1]', len(best_pair[1]))
+        # stock2 = data[best_pair[1]].iloc[formation_period:formation_period + trading_period]
+        # # print('stock2', stock2)
+        stock1 = best_pair[0]
+        print('best_pair[0]', best_pair[0])
+        stock1 = data[best_pair[0]]
+        print('data[best_pair[0]]', data[best_pair[0]])
+        stock2 = best_pair[1]
+        print('best_pair[1]', best_pair[1])
+        stock2 = data[best_pair[1]]
+        print('data[best_pair[1]]', data[best_pair[1]])
 
         # Step 5: Generate Trading Signals
         signals = pairs_trading(stock1, stock2, window_size, threshold)
@@ -454,6 +497,93 @@ def strategy1():
 def backtest1():
     print("backtest 1 route accessed")
     return "backtest 1 executed successfully!"
+
+@minimumdistance_bp.route('/minimumdistance_stockpair1', methods=['POST'])
+def minimumdistance_stockpair1():
+    # Retrieve form data
+    stock = request.form.get('stock').upper()  # Stock symbol
+
+    # Perform logic with stock
+    if not stock:
+        return "Error: No stock provided.", 400  # Return an error response if 'stock' is missing
+
+    # Example logic: Append to pairs_list
+    pairs_list.append(stock)
+    pairs_info['pairs_list'] = pairs_list
+
+    # Return a success response
+    return {"message": "Stock added successfully", "pairs_list": pairs_list}, 200
+
+
+@minimumdistance_bp.route('/minimumdistance_stockpair2', methods=['POST'])
+def minimumdistance_stockpair2():
+    import io
+    import base64
+    from matplotlib.figure import Figure
+        # Retrieve form data
+    start_date = request.form.get('start_date')  # Start date
+    end_date = request.form.get('end_date')  # End date
+
+    # Check if the required data is provided
+    if not start_date or not end_date:
+        return {"message": "Error: Both start_date and end_date are required."}, 400
+
+    # Update the pairs_info dictionary
+    pairs_info['start_date'] = start_date
+    pairs_info['end_date'] = end_date
+    try:
+        tickers = pairs_info['pairs_list']
+        # print('strategy1-tickers', tickers)
+        if len(tickers) <= 1:
+            return
+        start_date = pairs_info['start_date']
+        end_date = pairs_info['end_date']
+        # print('start_date', start_date, 'end_date', end_date)
+        formation_period = 252  # Formation period (1 year)
+
+        # Step 2: Fetch Stock Data
+        data = get_data(tickers, start=start_date, end=end_date)
+        print('strategy1-data', data)
+        if data.empty:
+            return render_template('error.html', message="Failed to retrieve stock data.")
+
+        # Step 3: Identify Pair with Minimum Distance
+        best_pair, min_distance = find_pairs_min_distance(data, formation_period)
+        min_distance = round(min_distance, 2)
+        print(f"Best pair: {best_pair}, Minimum distance: {min_distance}")
+
+        fig = Figure(figsize=(8, 4))
+        ax = fig.add_subplot(1, 1, 1)
+        stock1 = data[best_pair[0]]
+        stock2 = data[best_pair[1]]
+
+        # Plot the price spread
+        spread = stock1 - stock2
+        ax.plot(spread.index, spread.values, label="Price Spread", color="blue")
+        ax.set_title(f"Spread Chart for {best_pair[0]} and {best_pair[1]}")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price Spread")
+        ax.legend()
+        ax.grid(True)
+
+        # Encode the plot as Base64
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        plot_data = base64.b64encode(buf.read()).decode('utf-8')
+        buf.close()
+        # Return a success response
+        return render_template('minimumdistance.html', best_pair=best_pair, min_distance=min_distance, plot_data=plot_data)
+    except:
+        message = "Data analysis not successfully"
+        return render_template('minimumdistance.html', message=message)
+
+
+
+@minimumdistance_bp.route('/minimumdistance_stockpair_page')
+def minimumdistance_stockpair_page():
+    # print('minimum page')
+    return render_template('minimumdistance.html')
 
 
 if __name__ == '__main__':
