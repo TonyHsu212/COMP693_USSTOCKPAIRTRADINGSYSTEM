@@ -14,7 +14,7 @@
 
 
 <div class="d-flex gap-3 vh-100">
-   <!-- Sidebar -->
+    <!-- Sidebar -->
     <nav class="sidebar custom-sidebar bg-light vh-1200 p-1 " >
         <div class="sidebar-header mb-4">
             <h5>Dashboard </h5>
@@ -77,64 +77,66 @@
 
     <main class="p-4 flex-grow-1 bg-light">
         <body>
-            <h4>Correlation Analysis Method</h4>
-            <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm" class="d-flex flex-wrap gap-3 align-items-center">
+            <h4>Minimum Distance Method</h4>
                 <!-- First Row -->
                 <div class="d-flex gap-3 flex-wrap">
-                    <div>
-                        <label for="stock1">Stock1:</label>
-                        <input type="text" id="stock1" name="stock1" required>
-                    </div>
-                    <div>
-                        <label for="stock2">Stock2:</label>
-                        <input type="text" id="stock2" name="stock2" required>
-                    </div>
-                    <div>
-                        <label for="period">Period:</label>
-                        <select id="period" name="period" required>
-                            <option value="1d">1 day</option>
-                            <option value="5d">5 day</option>
-                            <option value="1wk">1 week</option>
-                            <option value="1mo">1 month</option>
-                            <option value="3mo">3 month</option>
-                            <option value="6mo">6 month</option>
-                            <option value="1y">1 Year</option>
-                            <option value="2y">2 year</option>
-                            <option value="5y">5 year</option>
-                            <option value="1ytd">till now</option>
-                            <option value="max">Max</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="interval">Interval:</label>
-                        <select id="interval" name="interval" required>
-                            <option value="1Min">1Min</option>
-                            <option value="5Min">5Min</option>
-                            <option value="15Min">15Min</option>
-                            <option value="1Hour">1Hour</option>
-                            <option value="1Day">1Day</option>
-                        </select>
-                    </div>
+                    <form action="{{ url_for('minimumdistance.minimumdistance_stockpair1') }}" method="POST" id="addForm" class="d-flex flex-wrap gap-3 align-items-center">
+                        <div>
+                            <label for="stock">Stock Symbol:</label>
+                            <input type="text" id="stock" name="stock" required placeholder="more than two stocks">
+                        </div>
+                        <div>
+                            <button type="submit" name="minimum" class="btn btn-outline-primary ms-1">Add</button>
+                        </div>
+                    </form>
+
+                    <script>
+                        document.getElementById("addForm").addEventListener("submit", async function (event) {
+                            event.preventDefault();
+
+                            const form = event.target;
+                            const formData = new FormData(form);
+                            const response = await fetch(form.action, {
+                                method: form.method,
+                                body: formData,
+                            });
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                alert(data.message);
+                            } else {
+                                alert("Error: Failed to add stock.");
+                            }
+                        });
+                    </script>
+
+                    <form action="{{ url_for('minimumdistance.minimumdistance_stockpair2') }}" method="POST" id="analysisForm" class="d-flex flex-wrap gap-3 align-items-center">
+                        <div>
+                            <label for="start_date">Start Date:</label>
+                            <input type="date" id="start_date" name="start_date" required>
+                        </div>
+                        <div>
+                            <label for="end_date">End Date:</label>
+                            <input type="date" id="end_date" name="end_date" required>
+                        </div>
+                        <div>
+                            <button type="submit" name="minimum" class="btn btn-outline-primary ms-1">Analyze</button>
+                        </div>
+                    </form>
                 </div>
-                <!-- Second Row -->
-<!--                <div class="d-flex gap-3 flex-wrap">-->
-                    <div>
-<!--                        <div class="align-self-end">-->
-                            <button type="submit" name="analyze" class="btn btn-outline-primary ms-1">Analyze</button>
-<!--                        </div>-->
-                    </div>
-<!--                </div>-->
-            </form>
             <hr>
             <!-- Analysis Results -->
             <div class="row g-3 align-items-center">
                 <div class="col-md-2"><p><strong>Analysis Results</strong></p></div>
-                <div class="col-md-2">
-                    <p>Correlation: <strong id="correlation">{{ result['correlation'] }}</strong></p>
+                <div class="col-md-4">
+                    <p>Optimal Pairs: <strong id="pairs">{{best_pair}}</strong></p>
                 </div>
-                <div class="col-md-2">
-                    <p>P-Value: <strong id="pValue">{{ result['pValue'] }}</strong></p>
+
+                <div class="col-md-4">
+                    <p>Minimum Distance: <strong id="minimum">{{min_distance}}</strong></p>
                 </div>
+                <div>{{message}}</div>
+
             </div>
             <hr>
 

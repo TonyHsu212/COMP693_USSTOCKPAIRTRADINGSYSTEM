@@ -94,26 +94,24 @@
 <!--</div>-->
 
 <div class="d-flex gap-3 vh-100">
-    <!-- Sidebar -->
+   <!-- Sidebar -->
     <nav class="sidebar custom-sidebar bg-light vh-1200 p-1 " >
         <div class="sidebar-header mb-4">
             <h5>Dashboard </h5>
-<!--            <p>Welcome to the dashboard!</p>-->
-<!--            <h5>US Stock Pair Trading System</h5>-->
         </div>
         <form class="mb-3">
             <input type="search" class="form-control" placeholder="Search...">
         </form>
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ url_for('pairanalyze.analyze_pair_page') }}" >
-                    <i class="bi bi-cash-coin me-2" ></i> Stock Pairs Analysis
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="analyzepairDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-cash-coin me-2"></i> Stock Pairs Analysis
                 </a>
+                <ul class="dropdown-menu" id="analyzepairMenu" aria-labelledby="analyzepairDropdown">
+                    <li><a class="dropdown-item" href="{{ url_for('pairanalyze.analyze_pair_page') }}">Correlation Analysis Method</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('minimumdistance.minimumdistance_stockpair_page') }}">Minimum Distance Method</a></li>
+                </ul>
             </li>
-
-<!--            <li class="nav-item">-->
-<!--                <a class="nav-link text-dark" href="/grid_strategy" ><i class="bi bi-cash-coin me-2"></i>Explore Strategies</a>-->
-<!--            </li>-->
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-dark" href="#" id="explorestrategiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -132,57 +130,8 @@
                 <ul class="dropdown-menu" id="backteststrategiesMenu" aria-labelledby="backteststrategiesDropdown">
                     <li><a class="dropdown-item" href="{{url_for('strategy.strategy1')}}">minimum distance strategy</a></li>
                     <li><a class="dropdown-item" href="#">grid strategy</a></li>
-<!--                    <li><hr class="dropdown-divider"></li>-->
-<!--&lt;!&ndash;                    <li><a class="dropdown-item" href="/yet_another_strategy">Yet Another Strategy</a></li>&ndash;&gt;-->
-<!--                    <li>-->
-<!--                        <button id="addfileButton" class="dropdown-item text-primary">Add More Strategy</button>-->
-<!--                        <input type="file" id="addfileInput" style="display: none;">-->
-                    </li>
                 </ul>
             </li>
-
-            <script>
-                let i = 0; // Initialize counter
-
-                document.getElementById("fileButton").addEventListener("click", function () {
-                    // Increment the counter on button click
-                    i += 1;
-
-                    // Trigger the hidden file input
-                    document.getElementById("fileInput").click();
-                });
-
-                document.getElementById("fileInput").addEventListener("change", function (event) {
-                    const file = event.target.files[0];
-
-                    if (file) {
-                        const strategiesMenu = document.getElementById("strategiesMenu");
-
-                        // Extract the file name without the extension
-                        const fileName = file.name.split(".").slice(0, -1).join(".");
-
-                        // Create a new list item
-                        const newItem = document.createElement("li");
-                        const newLink = document.createElement("a");
-
-                        // Set attributes and content for the new link
-                        newLink.className = "dropdown-item";
-
-                        // Dynamically set the href with the selected file name
-                        newLink.href = `/filename/${encodeURIComponent(fileName)}`;
-
-                        // Set the link text to the file name
-                        newLink.textContent = fileName;
-
-                        // Append the new link to the list item
-                        newItem.appendChild(newLink);
-
-                        // Insert the new list item above the "Add More Strategy" button
-                        strategiesMenu.insertBefore(newItem, strategiesMenu.lastElementChild);
-                    }
-                });
-            </script>
-
 
             <li class="nav-item">
                 <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}"><i class="bi bi-cash-coin me-2"></i> Pairs Trading</a>
@@ -203,12 +152,6 @@
             <li class="nav-item">
                 <a class="nav-link text-dark" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-left me-2"></i> Logout</a>
             </li>
-<!--            <li class="nav-item mt-3">-->
-<!--                <label class="form-check form-switch">-->
-<!--                    <input class="form-check-input" type="checkbox" id="darkModeSwitch">-->
-<!--                    <span class="form-check-label">Dark Mode</span>-->
-<!--                </label>-->
-<!--            </li>-->
         </ul>
     </nav>
 
