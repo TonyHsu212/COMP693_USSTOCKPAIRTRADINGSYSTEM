@@ -579,11 +579,17 @@ def minimumdistance_stockpair2():
         return render_template('minimumdistance.html', message=message)
 
 
-
 @minimumdistance_bp.route('/minimumdistance_stockpair_page')
 def minimumdistance_stockpair_page():
     # print('minimum page')
     return render_template('minimumdistance.html')
+
+
+@minimumdistance_bp.route('/minimumdistancemethod_page')
+def minimumdistancemethod_page():
+    # print('minimum page')
+    return render_template('minimumdistancemethod.html')
+
 
 
 if __name__ == '__main__':
