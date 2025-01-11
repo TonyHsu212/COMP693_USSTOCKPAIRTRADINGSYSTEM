@@ -413,10 +413,15 @@ def strategy1():
         # tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN']  # List of tickers
         # start_date = '2020-01-01'
         # end_date = '2023-01-01'
-        tickers = pairs_info['pairs_list']
+        # tickers = pairs_info['pairs_list']
+        tickers = pairs_info.get('pairs_list', [])
+        if len(tickers) == 0:
+            return render_template('error.html', message="The pairs list is empty.")
+
         print('strategy1-tickers', tickers)
         if len(tickers) <= 1:
-            return
+            return render_template('error.html', message="Not enough tickers to perform the strategy.")
+
         start_date = pairs_info['start_date']
         end_date = pairs_info['end_date']
         print('start_date', start_date, 'end_date', end_date)
