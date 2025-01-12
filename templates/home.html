@@ -1,7 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<!-- CSS Styling -->
+<style>
+    /* Ensure all carousel images are the same size */
+    .carousel-image {
+        width: 100%; /* Set the width to match the largest image */
+        height: 300px; /* Set a fixed height for consistency */
+        object-fit: contain; /* Maintain aspect ratio without cropping */
+        transition: transform 0.3s ease; /* Smooth scaling transition (optional) */
+    }
+</style>
 
 <div class="jumbotron text-center">
     <h1 style="color: #007bff; font-size: 2.5rem;">Welcome to the US Stock Pair Trading System</h1>
