@@ -10,7 +10,7 @@ from chart import convertWatchlist
 from order import order_bp
 from stock_matching import pair_bp
 from stock_pair import allstock_bp
-from stockpair_yfinance import pairanalyze_bp
+from stock_pair_alpaca import pairanalyze_bp
 from minimum_distance_strategy import maxmindistance_strategy, maxmindistance_backtest, minimumdistance_bp
 from test_strategy import test_bp
 
