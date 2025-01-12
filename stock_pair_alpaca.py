@@ -291,7 +291,7 @@ def analyze_stock_pair():
             print('-0-')
             return jsonify({"error": "All parameters (stock1, stock2, period, interval) are required."}), 400
 
-        period_mapping = {"1d": 1, "5d": 5, "1wk": 7, "1mo": 30, "3mo": 90, "6mo": 180, "1y": 365, "2y": 730, "5y": 1825}
+        period_mapping = {"1d": 1, "5d": 5, "1wk": 7, "1mo": 30, "3mo": 90, "6mo": 180, "1y":365, "2y": 730, "5y": 1825}
         valid_intervals = ["1Min", "5Min", "15Min", "1Hour", "1Day"]
 
         if period not in period_mapping:
