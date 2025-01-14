@@ -3,7 +3,7 @@ import numpy as np
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, flash, redirect, url_for
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
@@ -22,14 +22,16 @@ maxmindistance_backtest = Blueprint('backtest', __name__, template_folder='templ
 # Create a blueprint for minimumdistance
 minimumdistance_bp = Blueprint('minimumdistance', __name__, template_folder='templates')
 # Obtain the optimal pairs
-pairs_info = {}
-pairs_list = []
+pairs_info = {}  # including date
+pairs_list = []  # including stock symbols
 
 # Step 1: Get stock data
 # def get_data(tickers, start, end):
 #     data = yf.download(tickers, start=start, end=end)['Adj Close']
 #     return data
 
+
+# Step 1: Get stock data
 def get_data(tickers, start, end):
     # Initialize Alpaca client
     client = StockHistoricalDataClient(API_KEY, API_SECRET)
@@ -53,14 +55,15 @@ def get_data(tickers, start, end):
     return df
 
 
-
 # Step 2: Standardize stock prices
 def normalize_prices(prices):
     return prices / prices.iloc[0]
 
+
 # Step 3: Calculate the square distance
 def squared_distance(series1, series2):
     return np.sum((series1 - series2) ** 2)
+
 
 # Step 4: Find the stock pairs with the smallest distance
 def find_pairs_min_distance(stock_data, formation_period):
@@ -82,6 +85,7 @@ def find_pairs_min_distance(stock_data, formation_period):
                 best_pair = (tickers[i], tickers[j])
 
     return best_pair, min_distance
+
 
 # Step 5: Pair trading strategies
 def pairs_trading(stock1, stock2, window_size, threshold):
@@ -406,30 +410,92 @@ def backtest(returns, total_returns):
     }
 
 
+@maxmindistance_strategy.route('/set_up_parameter', methods=['POST'])
+def set_up_parameter():
+    global pairs_info  # Use the global dictionary to store parameters
+
+    print('set_up_parameter')
+    try:
+        # Retrieve form data
+        start_date = request.form.get('start_date')
+        print('start_date', start_date)
+        end_date = request.form.get('end_date')
+        formation_period = request.form.get('formation_period')
+        trading_period = request.form.get('trading_period')
+        window_size = request.form.get('window_size')
+        threshold = request.form.get('threshold')
+
+        # Validate inputs
+        if not (start_date and end_date and formation_period and trading_period and window_size and threshold):
+            flash("All fields are required.", "danger")
+            return redirect(url_for('maxmindistance_strategy.parameter_form'))
+
+        # Store validated parameters in the dictionary
+        pairs_info = {
+            "pairs_list": pairs_list,
+            "start_date": start_date,
+            "end_date": end_date,
+            "formation_period": int(formation_period),
+            "trading_period": int(trading_period),
+            "window_size": int(window_size),
+            "threshold": float(threshold)
+        }
+        print('pairs_info', pairs_info)
+
+        # flash("Parameters set successfully!", "success")
+        return {"message": "Parameters set successfully!", "pairs_info": pairs_info}, 200
+
+    except ValueError as e:
+        # flash(f"Invalid input: {e}", "danger")
+        return "Error: No parameters set successfully!.", 400  # Return an error response if Parameters not set successfully!
+
+# @maxmindistance_strategy.route('/parameter_form')
+# def parameter_form():
+#     # Render the HTML form for parameter setup
+#     print(parameter_form)
+#     return render_template('parameter_form.html', parameter=parameter)
+
+
 @maxmindistance_strategy.route('/strategy1')
 def strategy1():
+    global pairs_info
     try:
         # Step 1: Define Parameters
         # tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN']  # List of tickers
         # start_date = '2020-01-01'
         # end_date = '2023-01-01'
         # tickers = pairs_info['pairs_list']
+        print('pairs_info', pairs_info)
         tickers = pairs_info.get('pairs_list', [])
         if len(tickers) == 0:
             return render_template('error.html', message="The pairs list is empty.")
 
-        print('strategy1-tickers', tickers)
+        print('strategy1-tickers', tickers, 'pairs_info', pairs_info)
+        print('0')
         if len(tickers) <= 1:
             return render_template('error.html', message="Not enough tickers to perform the strategy.")
+        print("pairs_info['start_date']", pairs_info)
+        if 'formation_period' in pairs_info:
+            print('1')
+            start_date = pairs_info['start_date']
+            end_date = pairs_info['end_date']
+            print('start_date', start_date, 'end_date', end_date, 'pairs_info', pairs_info)
+            formation_period = 252  # Formation period (1 year)
+            trading_period = 252  # Trading period (1 year)
+            window_size = 30  # Rolling window size
+            threshold = 0.02  # Price spread threshold
+        else:
+            print('2')
+            print('pairs_info', pairs_info)
+            start_date = pairs_info['start_date']
+            print('start_date', start_date)
+            end_date = pairs_info['end_date']
+            formation_period = pairs_info['formation_period']  # Formation period (1 year)
+            trading_period = pairs_info['trading_period']  # Trading period (1 year)
+            window_size = pairs_info['window_size']  # Rolling window size
+            threshold = pairs_info['threshold']  # Price spread threshold
 
-        start_date = pairs_info['start_date']
-        end_date = pairs_info['end_date']
-        print('start_date', start_date, 'end_date', end_date)
-        formation_period = 252  # Formation period (1 year)
-        trading_period = 252  # Trading period (1 year)
-        window_size = 30  # Rolling window size
-        threshold = 0.02  # Price spread threshold
-
+        print('3')
         # Step 2: Fetch Stock Data
         data = get_data(tickers, start=start_date, end=end_date)
         print('strategy1-data', data)
@@ -458,15 +524,16 @@ def strategy1():
 
         # Step 5: Generate Trading Signals
         signals = pairs_trading(stock1, stock2, window_size, threshold)
-        # print('signals', signals)
+        print('signals', signals)
 
         # Step 6: Backtest the Strategy
         returns, total_returns = cumulative_returns(stock1, stock2, signals)
+        print('4')
 
         # print('the type of total_returns', type(total_returns), 'total_returns', total_returns)
         metrics = backtest(returns, total_returns)
-        # print('metrics', metrics)
-
+        print('metrics', metrics)
+        print('4')
         # Step 7: Visualize the Results using Base64 Encoding
         from matplotlib.figure import Figure
         import io
@@ -480,6 +547,7 @@ def strategy1():
         ax.set_ylabel('Cumulative Returns')
         ax.legend()
         ax.grid(True)
+        print('5')
 
         # Save the plot as a Base64-encoded image
         buf = io.BytesIO()
@@ -487,6 +555,7 @@ def strategy1():
         buf.seek(0)
         img_data = base64.b64encode(buf.read()).decode('utf-8')
         buf.close()
+        print('6')
 
         # Step 8: Render the Results
         # Render the HTML template and pass the image data
@@ -503,8 +572,11 @@ def backtest1():
     print("backtest 1 route accessed")
     return "backtest 1 executed successfully!"
 
+
 @minimumdistance_bp.route('/minimumdistance_stockpair1', methods=['POST'])
 def minimumdistance_stockpair1():
+    global pairs_list
+    global pairs_info
     # Retrieve form data
     stock = request.form.get('stock').upper()  # Stock symbol
 
@@ -515,6 +587,8 @@ def minimumdistance_stockpair1():
     # Example logic: Append to pairs_list
     pairs_list.append(stock)
     pairs_info['pairs_list'] = pairs_list
+    print('pairs_list', pairs_list)
+    print('pairs_info', pairs_info)
 
     # Return a success response
     return {"message": "Stock added successfully", "pairs_list": pairs_list}, 200
@@ -525,7 +599,10 @@ def minimumdistance_stockpair2():
     import io
     import base64
     from matplotlib.figure import Figure
-        # Retrieve form data
+    # using global pairs_info
+    global pairs_info
+    global pairs_list
+    # Retrieve form data
     start_date = request.form.get('start_date')  # Start date
     end_date = request.form.get('end_date')  # End date
 
@@ -540,7 +617,7 @@ def minimumdistance_stockpair2():
         tickers = pairs_info['pairs_list']
         # print('strategy1-tickers', tickers)
         if len(tickers) <= 1:
-            return
+            return {"message": "Error: The number of tickers must be two."}, 400
         start_date = pairs_info['start_date']
         end_date = pairs_info['end_date']
         # print('start_date', start_date, 'end_date', end_date)
@@ -578,23 +655,22 @@ def minimumdistance_stockpair2():
         plot_data = base64.b64encode(buf.read()).decode('utf-8')
         buf.close()
         # Return a success response
-        return render_template('minimumdistance.html', best_pair=best_pair, min_distance=min_distance, plot_data=plot_data)
+        return render_template('max_min_distance.html', best_pair=best_pair, min_distance=min_distance, plot_data=plot_data)
     except:
         message = "Data analysis not successfully"
-        return render_template('minimumdistance.html', message=message)
+        return render_template('max_min_distance.html', message=message)
 
 
 @minimumdistance_bp.route('/minimumdistance_stockpair_page')
 def minimumdistance_stockpair_page():
     # print('minimum page')
-    return render_template('minimumdistance.html')
+    return render_template('max_min_distance.html')
 
 
 @minimumdistance_bp.route('/minimumdistancemethod_page')
 def minimumdistancemethod_page():
     # print('minimum page')
-    return render_template('minimumdistancemethod.html')
-
+    return render_template('max_min_distance_method_parameter_form.html')
 
 
 if __name__ == '__main__':

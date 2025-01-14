@@ -1,27 +1,19 @@
-
 {% extends "base.html" %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
 <style>
-    table {
-        width: 50%;
-        margin: 20px auto;
-        border-collapse: collapse;
-    }
-    th, td {
-        padding: 10px;
-        border: 1px solid #ccc;
-        text-align: left;
-    }
-    th {
-        background-color: #f4f4f4;
+    h2, p {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        font-weight: normal;
     }
 </style>
 
 
-<div class="d-flex gap-3 vh-80" >
+
+<div class="d-flex gap-3 vh-100">
     <!-- Sidebar -->
     <div class="col-md-4 mt offset-md-n1 " >
         <div class="card shadow-sm rounded-3 vh-50"  style="position: fixed; top: 12%; left: 0; width: 18%;">
@@ -101,17 +93,88 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="card-body p-4 flex-grow-1 bg-light vh-80"
-        style="margin-left: -15%; border: 2px solid #007bff; border-radius: 5px; overflow-y: auto;">
-        <nav class="bg-light vh-100 p-3">
-            <h2 align="center" style="color: #007bff; font-size: 2rem;">Create Minimum Distance Strategy and Set Up Parameter</h2>
+    <main class="card-body p-4 flex-grow-1 bg-light " style="margin-left: -15%; border: 2px solid #007bff; border-radius: 5px;">
+        <body>
+<!--            <h4>Minimum Distance Method</h4>-->
+            <h2 align="center" style="color: #007bff; font-size: 2rem;">Minimum Distance Method </h2>
             <hr>
-            <body class="vh-80">
-                <!-- Content Goes Here -->
-            </body>
-        </nav>
+            <!-- First Row -->
+            <div class="d-flex gap-3 flex-wrap">
+                <form action="{{ url_for('minimumdistance.minimumdistance_stockpair1') }}" method="POST" id="addForm" class="d-flex flex-wrap gap-3 align-items-center">
+                    <div>
+                        <label for="stock">Stock Symbol:</label>
+                        <input type="text" id="stock" name="stock" required placeholder="more than two stocks">
+                    </div>
+                    <div>
+                        <button type="submit" name="minimum" class="btn btn-outline-primary ms-1">Add</button>
+                    </div>
+                </form>
+
+                <script>
+                    document.getElementById("addForm").addEventListener("submit", async function (event) {
+                        event.preventDefault();
+
+                        const form = event.target;
+                        const formData = new FormData(form);
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            body: formData,
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            alert(data.message);
+                        } else {
+                            alert("Error: Failed to add stock.");
+                        }
+                    });
+                </script>
+
+                <form action="{{ url_for('minimumdistance.minimumdistance_stockpair2') }}" method="POST" id="analysisForm" class="d-flex flex-wrap gap-3 align-items-center">
+                    <div>
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" required>
+                    </div>
+                    <div>
+                        <label for="end_date">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" required>
+                    </div>
+                    <div>
+                        <button type="submit" name="minimum" class="btn btn-outline-primary ms-1">Analyze</button>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <!-- Analysis Results -->
+            <div class="row g-3 align-items-center">
+                <div class="col-md-2"><p><strong>Analysis Results</strong></p></div>
+                <div class="col-md-4">
+                    <p>Optimal Pairs: <strong id="pairs">{{best_pair}}</strong></p>
+                </div>
+
+                <div class="col-md-4">
+                    <p>Minimum Distance: <strong id="minimum">{{min_distance}}</strong></p>
+                </div>
+                <div>{{message}}</div>
+
+            </div>
+            <hr>
+
+            <div class="text-center">
+                {% if plot_data %}
+                    <img src="data:image/png;base64,{{ plot_data }}" class="img-fluid" alt="Spread Chart">
+                {% else %}
+                    {% if e %}}
+                        <p>e</p>
+                        {% else %}
+                            <p>No chart available.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+        </body>
     </main>
+
 
 </div>
 
