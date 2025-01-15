@@ -24,6 +24,7 @@ minimumdistance_bp = Blueprint('minimumdistance', __name__, template_folder='tem
 # Obtain the optimal pairs
 pairs_info = {}  # including date
 pairs_list = []  # including stock symbols
+risk_metrics = {} # including risk metrics
 
 # Step 1: Get stock data
 # def get_data(tickers, start, end):
@@ -160,6 +161,7 @@ def cumulative_returns(stock1, stock2, signals):
 def backtest(returns, total_returns):
     import numpy as np
     import pandas as pd
+    global risk_metrics
     # Total Return
     # total_return = total_returns[-1] / (total_returns[0] - 1) if total_returns[0] != 0 else 0
     print('total_returns', total_returns)
@@ -393,6 +395,12 @@ def backtest(returns, total_returns):
     # print(f"Alpha: {alpha}")
     print(f"Beta: {beta:.4f}")
 
+    risk_metrics['volatility'] = volatility
+    risk_metrics['sharpe_ratio'] = sharpe_ratio
+    risk_metrics['max_drawdown'] = max_drawdown
+    risk_metrics['stability'] = stability
+    risk_metrics['annual_volatility'] = annual_volatility
+
     return {
         'total_return': total_return,
         'annual_return': annual_return,
@@ -475,7 +483,7 @@ def strategy1():
         if len(tickers) <= 1:
             return render_template('error.html', message="Not enough tickers to perform the strategy.")
         print("pairs_info['start_date']", pairs_info)
-        if 'formation_period' in pairs_info:
+        if 'formation_period' not in pairs_info:
             print('1')
             start_date = pairs_info['start_date']
             end_date = pairs_info['end_date']

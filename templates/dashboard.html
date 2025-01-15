@@ -131,7 +131,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">
+                            <a class="nav-link text-dark" href="{{ url_for('risk_control.risk_control') }}">
                                 <i class="bi bi-cash-coin me-2"></i> Risk Management
                             </a>
                         </li>
@@ -167,50 +167,50 @@
 
     <!-- Main Content -->
     <main class="card-body p-4 flex-grow-1 bg-light " style="margin-left: -15%; border: 2px solid #007bff; border-radius: 5px;">
-            <nav class=" bg-light vh-80 p-3 ">
+        <nav class=" bg-light vh-80 p-3 ">
 <!--                <h2 align="center" style="color: #007bff; font-size: 2rem;">{{user_name}} {{' '}}Account Information</h2>-->
-                <div class="card-header bg-primary text-white rounded-3">
-                    <h5 class="mb-0 text-center">{{user_name}} {{' '}}Account Information</h5>
-                </div>
-                <hr>
-                <div class="card-body bg-light">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Field</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Account ID</td>
-                                <td>{{ accountinfo.id }}</td>
-                            </tr>
-                            <tr>
-                                <td>Status</td>
-                                <td>{{ accountinfo.status }}</td>
-                            </tr>
-                            <tr>
-                                <td>Equity</td>
-                                <td>{{ accountinfo.equity }}</td>
-                            </tr>
-                            <tr>
-                                <td>Cash</td>
-                                <td>{{ accountinfo.cash }}</td>
-                            </tr>
-                            <tr>
-                                <td>Initial Margin</td>
-                                <td>{{ accountinfo.initial_margin }}</td>
-                            </tr>
-                            <tr>
-                                <td>Maintenance Margin</td>
-                                <td>{{ accountinfo.maintenance_margin }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </nav>
-        </main>
+            <div class="card-header bg-primary text-white rounded-3">
+                <h5 class="mb-0 text-center">{{user_name}} {{' '}}Account Information</h5>
+            </div>
+            <hr>
+            <div class="card-body bg-light">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Account ID</td>
+                            <td>{{ accountinfo.id }}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>{{ accountinfo.status }}</td>
+                        </tr>
+                        <tr>
+                            <td>Equity</td>
+                            <td>{{ accountinfo.equity }}</td>
+                        </tr>
+                        <tr>
+                            <td>Cash</td>
+                            <td>{{ accountinfo.cash }}</td>
+                        </tr>
+                        <tr>
+                            <td>Initial Margin</td>
+                            <td>{{ accountinfo.initial_margin }}</td>
+                        </tr>
+                        <tr>
+                            <td>Maintenance Margin</td>
+                            <td>{{ accountinfo.maintenance_margin }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </nav>
+    </main>
 
 
 </div>

@@ -8,6 +8,7 @@ import globalvaluemanagement
 from account_management import auth_bp
 from chart import convertWatchlist
 from order import order_bp
+from risk_control import risk_pb
 from stock_matching import pair_bp
 from stock_pair import allstock_bp
 from stock_pair_alpaca import pairanalyze_bp
@@ -34,6 +35,7 @@ app.register_blueprint(test_bp, url_prefix='/')
 app.register_blueprint(maxmindistance_strategy, url_prefix='/')
 app.register_blueprint(maxmindistance_backtest, url_prefix='/')
 app.register_blueprint(minimumdistance_bp, url_prefix='/')
+app.register_blueprint(risk_pb, url_prefix='/')
 
 
 @app.route("/")
