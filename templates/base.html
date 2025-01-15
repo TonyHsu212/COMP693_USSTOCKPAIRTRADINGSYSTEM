@@ -71,31 +71,31 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <div class="scrolling-text">
-                                <a href="/">US Stock Pair Trading System</a>
+                                <a href="/" style="color: #007bff; font-size: 1rem; font-family: 'Playfair Display', serif;">US Stock Pair Trading System</a>
                             </div>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/" style="color: #007bff; font-size: 1rem;">Home</a>
+                            <a class="nav-link" href="/" style="color: #007bff; font-size: 1rem; font-family: 'Playfair Display', serif;">Home</a>
                         </li>
                         {% if session.get('user_name') %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/dashboard" style="color: #007bff; font-size: 1rem;">{{session.get('user_name')}}-Dashboard</a>
+                            <a class="nav-link" href="/dashboard" style="color: #007bff; font-size: 1rem; font-family: 'Playfair Display', serif;">{{session.get('user_name')}}-Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }} " style="color: #007bff; font-size: 1rem;">Logout</a>
+                            <a class="nav-link" href="{{ url_for('auth.logout') }} " style="color: #007bff; font-size: 1rem;font-family: 'Playfair Display', serif;">Logout</a>
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('dashboard') }}" style="color: #007bff; font-size: 1rem;">Dashboard</a>
+                            <a class="nav-link" href="{{ url_for('dashboard') }}" style="color: #007bff; font-size: 1rem; font-family: 'Playfair Display', serif;">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.register_login') }}" style="color: #007bff; font-size: 1rem;">Register/Login</a>
+                            <a class="nav-link" href="{{ url_for('auth.register_login') }}" style="color: #007bff; font-size: 1rem; font-family: 'Playfair Display', serif;">Register/Login</a>
                         </li>
                         {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/" style="color: #007bff; font-size: 1rem;">About</a>
+                            <a class="nav-link" href="/" style="color: #007bff; font-size: 1rem; font-family: 'Playfair Display', serif;">About</a>
                         </li>
                     </ul>
                 </div>

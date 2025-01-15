@@ -1,19 +1,8 @@
-{% extends "base.html" %}
-
-{% block title %}Dashboard{% endblock %}
+{% extends 'base.html' %}
 
 {% block content %}
-<style>
-    h2, p {
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        font-weight: normal;
-    }
-</style>
 
-
-
-<div class="d-flex gap-3 vh-100">
+<div class="d-flex gap-1 vh-80" >
     <!-- Sidebar -->
     <div class="col-md-4 mt offset-md-n1 " >
         <div class="card shadow-sm rounded-3 vh-50"  style="position: fixed; top: 12%; left: 0; width: 18%;">
@@ -93,87 +82,32 @@
         </div>
     </div>
 
-    <main class="card-body p-4 flex-grow-1 bg-light " style="margin-left: -15%; border: 2px solid #007bff; border-radius: 5px; overflow-y: auto;">
-        <body>
-<!--            <h4>Correlation Analysis Method</h4>-->
-            <h2 align="center" style="color: #007bff; font-size: 2rem;">Correlation Analysis Method </h2>
+    <!-- Mainbar -->
+    <main class="card-body p-4 flex-grow-1 bg-light" style="margin-left: -15%;border: 2px solid #007bff;border-radius: 5px;overflow-y: auto;height: 80vh;">
+        <div class="container mt-4">
+            <h2 align="center" style="color: #007bff; font-size: 2rem;">Risk Management</h2>
             <hr>
-            <form action="{{ url_for('pairanalyze.analyze_stock_pair') }}" method="POST" id="stockForm" class="d-flex flex-wrap gap-3 align-items-center">
-                <!-- First Row -->
-                <div class="d-flex gap-3 flex-wrap">
-                    <div>
-                        <label for="stock1">Stock1:</label>
-                        <input type="text" id="stock1" name="stock1" required>
-                    </div>
-                    <div>
-                        <label for="stock2">Stock2:</label>
-                        <input type="text" id="stock2" name="stock2" required>
-                    </div>
-                    <div>
-                        <label for="period">Period:</label>
-                        <select id="period" name="period" required>
-                            <option value="1d">1 day</option>
-                            <option value="5d">5 day</option>
-                            <option value="1wk">1 week</option>
-                            <option value="1mo">1 month</option>
-                            <option value="3mo">3 month</option>
-                            <option value="6mo">6 month</option>
-                            <option value="1y">1 Year</option>
-                            <option value="2y">2 year</option>
-                            <option value="5y">5 year</option>
-                            <option value="1ytd">till now</option>
-                            <option value="max">Max</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="interval">Interval:</label>
-                        <select id="interval" name="interval" required>
-                            <option value="1Min">1Min</option>
-                            <option value="5Min">5Min</option>
-                            <option value="15Min">15Min</option>
-                            <option value="1Hour">1Hour</option>
-                            <option value="1Day">1Day</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- Second Row -->
-<!--                <div class="d-flex gap-3 flex-wrap">-->
-                    <div>
-<!--                        <div class="align-self-end">-->
-                            <button type="submit" name="analyze" class="btn btn-outline-primary ms-1">Analyze</button>
-<!--                        </div>-->
-                    </div>
-<!--                </div>-->
-            </form>
-            <hr>
-            <!-- Analysis Results -->
-            <div class="row g-3 align-items-center">
-                <div class="col-md-2"><p><strong>Analysis Results</strong></p></div>
-                <div class="col-md-2">
-                    <p>Correlation: <strong id="correlation">{{ result['correlation'] }}</strong></p>
-                </div>
-                <div class="col-md-2">
-                    <p>P-Value: <strong id="pValue">{{ result['pValue'] }}</strong></p>
-                </div>
-            </div>
-            <hr>
+            <body>
+                <table class="table table-bordered table-striped mt-4">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for metric, value in risk_metrics.items() %}
+                        <tr>
+                            <td>{{ metric.replace('_', ' ').capitalize() }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-            <div class="text-center">
-                {% if plot_data %}
-                    <img src="data:image/png;base64,{{ plot_data }}" class="img-fluid" alt="Spread Chart">
-                {% else %}
-                    {% if e %}}
-                        <p>e</p>
-                        {% else %}
-                            <p>No chart available.</p>
-                    {% endif %}
-                {% endif %}
-            </div>
-
-        </body>
+            </body>
+        </div>
     </main>
 
-
 </div>
-
 {% endblock %}
