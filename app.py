@@ -7,7 +7,8 @@ from flask import Flask, render_template, session, jsonify, request, redirect, u
 import globalvaluemanagement
 from account_management import auth_bp
 from chart import convertWatchlist
-from order import order_bp
+from order_management import order_management_pb
+from order_placement import order_bp
 from risk_control import risk_pb
 from stock_matching import pair_bp
 from stock_pair import allstock_bp
@@ -36,6 +37,7 @@ app.register_blueprint(maxmindistance_strategy, url_prefix='/')
 app.register_blueprint(maxmindistance_backtest, url_prefix='/')
 app.register_blueprint(minimumdistance_bp, url_prefix='/')
 app.register_blueprint(risk_pb, url_prefix='/')
+app.register_blueprint(order_management_pb, url_prefix='/')
 
 
 @app.route("/")
