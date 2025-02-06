@@ -14,7 +14,7 @@
 
 
 <div class="d-flex gap-3 vh-100">
-    <!-- Sidebar -->
+     <!-- Sidebar -->
     <div class="col-md-4 mt offset-md-n1 " >
         <div class="card shadow-sm rounded-3 vh-50"  style="position: fixed; top: 12%; left: 0; width: 18%;">
             <div class="card-header bg-primary text-white">
@@ -53,26 +53,40 @@
                                 <li><a class="dropdown-item" href="#">Grid Strategy</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="pairtradingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-cash-coin me-2"></i> Pairs Trading
                             </a>
+                            <ul class="dropdown-menu" id="pairtradingMenu" aria-labelledby="pairtradingDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('minimumdistance.pairs_trading_minimum_distance') }}">Minimum Distance Strategy</a></li>
+                                <li><a class="dropdown-item" href="#">Grid Trading</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('pair.stock_pairs') }}">Speculative Transaction</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="{{ url_for('risk_control.risk_control') }}">
                                 <i class="bi bi-cash-coin me-2"></i> Risk Management
                             </a>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="orderManagementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-cash-coin me-2"></i> Orders Management
+                            </a>
+                            <ul class="dropdown-menu" id="orderManagementMenu" aria-labelledby="orderManagementMenu">
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.accepted_orders') }}">Accepted Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.filled_orders') }}">Filled Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.closed_orders') }}">Historical Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.other_orders') }}">Other Orders</a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/dashboard">
                                 <i class="bi bi-cash-coin me-2"></i> Account Settlement
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">
-                                <i class="bi bi-cash-coin me-2"></i> Order Details
-                            </a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="#">
                                 <i class="bi bi-cash-coin me-2"></i> Notifications
@@ -92,6 +106,8 @@
             </div>
         </div>
     </div>
+
+
 
     <main class="card-body p-4 flex-grow-1 bg-light " style="margin-left: -15%; border: 2px solid #007bff; border-radius: 5px; overflow-y: auto;">
         <body>
@@ -140,11 +156,16 @@
 <!--                <div class="d-flex gap-3 flex-wrap">-->
                     <div>
 <!--                        <div class="align-self-end">-->
-                            <button type="submit" name="analyze" class="btn btn-outline-primary ms-1">Analyze</button>
+                            <button type="submit" name="analyze" class="btn btn-outline-primary ms-1">Analyse</button>
 <!--                        </div>-->
                     </div>
 <!--                </div>-->
             </form>
+            <script>
+                // force language to english
+                document.documentElement.lang = 'en';
+                document.querySelector('input[type="date"]').setAttribute('lang', 'en');
+            </script>
             <hr>
             <!-- Analysis Results -->
             <div class="row g-3 align-items-center">
