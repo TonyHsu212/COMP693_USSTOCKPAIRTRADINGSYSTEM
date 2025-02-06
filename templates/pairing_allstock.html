@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Pairing all stock</title>
-    <script>
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<script>
         function startTask() {
             fetch('/allstock/start-task', {method: 'POST'})
                 .then(response => response.json())
@@ -28,9 +30,10 @@
             }, 1000);
         }
     </script>
-</head>
+
 <body>
     <button onclick="startTask()">Pairing all stock</button>
     <p id="status">Click to start pairing</p>
 </body>
-</html>
+
+{% endblock %}

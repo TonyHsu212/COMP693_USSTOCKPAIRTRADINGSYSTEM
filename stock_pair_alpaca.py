@@ -9,6 +9,8 @@ from matplotlib.figure import Figure
 from scipy.stats import pearsonr
 from flask import flash
 
+from account_management import getCursor
+
 # Initialize Alpaca API client
 API_KEY = "PK30X482MH0Y5RX80FPR"
 API_SECRET = "LJif4LRSDC4BLhu3EprXOvzcaSc5Y9dp3W8Afano"
@@ -346,6 +348,25 @@ def analyze_stock_pair():
         from scipy.stats import pearsonr
         corr, p_value = pearsonr(combined_data[f'close_{stock1}'], combined_data[f'close_{stock2}'])
         spread = combined_data[f'close_{stock1}'] - combined_data[f'close_{stock2}']
+
+        cursor, connection = getCursor()
+        # Insert query
+        insert_query = """
+        INSERT INTO stock_analysis (Symbol_1, Symbol_2, Correlation, p_value)
+        VALUES (%s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE 
+            Correlation = VALUES(Correlation),
+            p_value = VALUES(p_value);
+        """
+
+        # Data to insert
+        data = (stock1, stock2, corr, p_value)
+
+        # Execute the query
+        cursor.execute(insert_query, data)
+
+        # Commit the transaction
+        connection.commit()
 
         # Plot data
         from matplotlib.figure import Figure

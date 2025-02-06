@@ -14,7 +14,7 @@
 
 
 <div class="d-flex gap-3 vh-100">
-    <!-- Sidebar -->
+     <!-- Sidebar -->
     <div class="col-md-4 mt offset-md-n1 " >
         <div class="card shadow-sm rounded-3 vh-50"  style="position: fixed; top: 12%; left: 0; width: 18%;">
             <div class="card-header bg-primary text-white">
@@ -53,26 +53,40 @@
                                 <li><a class="dropdown-item" href="#">Grid Strategy</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="pairtradingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-cash-coin me-2"></i> Pairs Trading
                             </a>
+                            <ul class="dropdown-menu" id="pairtradingMenu" aria-labelledby="pairtradingDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('minimumdistance.pairs_trading_minimum_distance') }}">Minimum Distance Strategy</a></li>
+                                <li><a class="dropdown-item" href="#">Grid Trading</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('pair.stock_pairs') }}">Speculative Transaction</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="{{ url_for('risk_control.risk_control') }}">
                                 <i class="bi bi-cash-coin me-2"></i> Risk Management
                             </a>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="orderManagementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-cash-coin me-2"></i> Orders Management
+                            </a>
+                            <ul class="dropdown-menu" id="orderManagementMenu" aria-labelledby="orderManagementMenu">
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.accepted_orders') }}">Accepted Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.filled_orders') }}">Filled Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.closed_orders') }}">Historical Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.other_orders') }}">Other Orders</a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/dashboard">
                                 <i class="bi bi-cash-coin me-2"></i> Account Settlement
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ url_for('order_management.order_management') }}">
-                                <i class="bi bi-cash-coin me-2"></i> Orders Management
-                            </a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="#">
                                 <i class="bi bi-cash-coin me-2"></i> Notifications
@@ -93,6 +107,7 @@
         </div>
     </div>
 
+
     <main class="card-body p-4 flex-grow-1 bg-light " style="margin-left: -15%; border: 2px solid #007bff; border-radius: 5px;">
         <body>
 <!--            <h4>Minimum Distance Method</h4>-->
@@ -106,29 +121,31 @@
                         <input type="text" id="stock" name="stock" required placeholder="more than two stocks">
                     </div>
                     <div>
-                        <button type="submit" name="minimum" class="btn btn-outline-primary ms-1">Add</button>
+                        <button type="submit" id="minimum_add" name="minimum_add" value="add" class="btn btn-outline-primary ms-1">Add</button>
+                        <button type="submit" id="minimum_remove" name="minimum_remove" value="remove" class="btn btn-outline-primary ms-1">Remove</button>
+                        <p>{{message}}</p>
                     </div>
                 </form>
 
-                <script>
-                    document.getElementById("addForm").addEventListener("submit", async function (event) {
-                        event.preventDefault();
+<!--                <script>-->
+<!--                    document.getElementById("addForm").addEventListener("submit", async function (event) {-->
+<!--                        event.preventDefault();-->
 
-                        const form = event.target;
-                        const formData = new FormData(form);
-                        const response = await fetch(form.action, {
-                            method: form.method,
-                            body: formData,
-                        });
+<!--                        const form = event.target;-->
+<!--                        const formData = new FormData(form);-->
+<!--                        const response = await fetch(form.action, {-->
+<!--                            method: form.method,-->
+<!--                            body: formData,-->
+<!--                        });-->
 
-                        if (response.ok) {
-                            const data = await response.json();
-                            alert(data.message);
-                        } else {
-                            alert("Error: Failed to add stock.");
-                        }
-                    });
-                </script>
+<!--                        if (response.ok) {-->
+<!--                            const data = await response.json();-->
+<!--                            alert(data.message);-->
+<!--                        } else {-->
+<!--                            alert("Error: Failed to add stock.");-->
+<!--                        }-->
+<!--                    });-->
+<!--                </script>-->
 
                 <form action="{{ url_for('minimumdistance.minimumdistance_stockpair2') }}" method="POST" id="analysisForm" class="d-flex flex-wrap gap-3 align-items-center">
                     <div>
@@ -143,6 +160,11 @@
                         <button type="submit" name="minimum" class="btn btn-outline-primary ms-1">Analyze</button>
                     </div>
                 </form>
+                 <script>
+                    // Force the language of the date input box to be English
+                    document.getElementById('start_date').setAttribute('lang', 'en');
+                    document.getElementById('end_date').setAttribute('lang', 'en');
+                </script>
             </div>
             <hr>
             <!-- Analysis Results -->

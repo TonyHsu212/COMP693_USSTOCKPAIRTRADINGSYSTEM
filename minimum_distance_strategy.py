@@ -3,13 +3,18 @@ import numpy as np
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, session
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
 import pandas as pd
 import numpy as np
 from flask import Blueprint, request, render_template
+from alpaca.trading.client import TradingClient
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.timeframe import TimeFrame
+
+from account_management import getCursor
 
 # Alpaca API credentials
 API_KEY = 'PK30X482MH0Y5RX80FPR'
@@ -26,6 +31,18 @@ pairs_info = {}  # including date
 pairs_list = []  # including stock symbols
 risk_metrics = {} # including risk metrics
 
+# Initialize Alpaca client
+client = TradingClient(API_KEY, API_SECRET)
+def is_valid_ticker(ticker: str) -> bool:
+    try:
+        # obtain stock information
+        asset = client.get_asset(ticker)
+        # to check the stock is whether tradable
+        return asset.tradable
+    except Exception as e:
+        print(f"Error checking ticker {ticker}: {e}")
+        return False
+
 # Step 1: Get stock data
 # def get_data(tickers, start, end):
 #     data = yf.download(tickers, start=start, end=end)['Adj Close']
@@ -34,9 +51,9 @@ risk_metrics = {} # including risk metrics
 
 # Step 1: Get stock data
 def get_data(tickers, start, end):
-    # Initialize Alpaca client
-    client = StockHistoricalDataClient(API_KEY, API_SECRET)
-
+    print('get_data')
+    # 初始化数据客户端
+    data_client = StockHistoricalDataClient(API_KEY, API_SECRET)
     # Prepare request parameters
     request_params = StockBarsRequest(
         symbol_or_symbols=tickers,  # List of tickers
@@ -46,7 +63,7 @@ def get_data(tickers, start, end):
     )
 
     # Fetch data
-    bars = client.get_stock_bars(request_params)
+    bars = data_client.get_stock_bars(request_params)
     # print('get_data-tickers', tickers, 'get_data-bars', bars)
 
     # Convert to DataFrame and filter only adjusted close prices
@@ -85,28 +102,80 @@ def find_pairs_min_distance(stock_data, formation_period):
                 min_distance = distance
                 best_pair = (tickers[i], tickers[j])
 
+    # # Insert query
+    # query = """
+    # INSERT INTO stock_analysis_2 (Symbol_1, Symbol_2, min_distance)
+    # VALUES (%s, %s, %s, %s)
+    # """
+    # data = (best_pair[0], best_pair[1], min_distance)  # Use best_pair[0] for best_pair column
+    #
+    # cursor, connection = getCursor()
+    #
+    # # Execute and commit
+    # cursor.execute(query, data)
+    # connection.commit()
+
     return best_pair, min_distance
 
+# Define a pandas Series
+data = []
+norm_stock1 = pd.Series(data)
+norm_stock2 = pd.Series(data)
+stock_pairs_info = {}
 
 # Step 5: Pair trading strategies
 def pairs_trading(stock1, stock2, window_size, threshold):
+    global norm_stock1
+    global norm_stock1
+    global stock_pairs_info
+
     norm_stock1 = normalize_prices(stock1)
     norm_stock2 = normalize_prices(stock2)
 
-    signals = [0] * window_size  # 初始信号长度为 window_size
+    # The initial signal length is window size
+    signals = [0] * window_size
     for i in range(window_size, len(norm_stock1)):
         spread = norm_stock1.iloc[i] - norm_stock2.iloc[i]
         # print('spread', spread, 'norm_stock1.iloc[i]', norm_stock1.iloc[i], 'norm_stock2.iloc[i]', norm_stock2.iloc[i])
 
         if spread > threshold:
-            signals.append(-1)  # 做空股票1，做多股票2
+            signals.append(-1)  # Short stock 1, long stock 2
         elif spread < -threshold:
-            signals.append(1)   # 做多股票1，做空股票2
+            signals.append(1)   # Short stock 2, long stock 1
         else:
-            signals.append(0)   # 不交易
+            signals.append(0)   # No trading
+    print('----1----')
+    print('pairs_list[0]', pairs_list[0])
+    stock_pairs_info[pairs_list[0]] = norm_stock1
+    stock_pairs_info[pairs_list[1]] = norm_stock2
+    print('------2------', norm_stock1, '------3------',  norm_stock2)
+    # print('stock1', stock1, 'norm_stock1', norm_stock1, 'stock2', stock2, 'norm_stock2', norm_stock2)
 
     return signals
 
+# def pairs_trading(norm_stock1, norm_stock2, window_size, threshold):
+#     try:
+#         print('Validating inputs...')
+#         if not hasattr(norm_stock1, 'iloc') or not hasattr(norm_stock2, 'iloc'):
+#             raise ValueError("Inputs must be pandas Series.")
+#
+#         print('Inputs validated successfully.')
+#         # Initialize signals
+#         signals = [0] * window_size
+#         for i in range(window_size, len(norm_stock1)):
+#             spread = norm_stock1.iloc[i] - norm_stock2.iloc[i]
+#             print('spread:', spread, 'norm_stock1.iloc[i]:', norm_stock1.iloc[i], 'norm_stock2.iloc[i]:', norm_stock2.iloc[i])
+#
+#             if spread > threshold:
+#                 signals.append(-1)  # Short stock 1, long stock 2
+#             elif spread < -threshold:
+#                 signals.append(1)   # Short stock 2, long stock 1
+#             else:
+#                 signals.append(0)   # No trading
+#         return signals[-1]
+#     except Exception as e:
+#         print(f"Error in pairs_trading: {e}")
+#         raise
 
 # Step 6: strategy backtest
 # calculate returns
@@ -587,33 +656,54 @@ def minimumdistance_stockpair1():
     global pairs_info
     # Retrieve form data
     stock = request.form.get('stock').upper()  # Stock symbol
-
+    print('minimumdistance_stockpair1')
+    button_name = request.form
+    print('button_name', button_name)
     # Perform logic with stock
-    if not stock:
+    if not stock or not is_valid_ticker(stock):
         return "Error: No stock provided.", 400  # Return an error response if 'stock' is missing
 
-    # Example logic: Append to pairs_list
-    pairs_list.append(stock)
-    pairs_info['pairs_list'] = pairs_list
-    print('pairs_list', pairs_list)
-    print('pairs_info', pairs_info)
+    if 'minimum_add' in request.form:
+        print('minimumdistance_stockpair1-minimum_add')
+        # Append stock into pairs_list
+        pairs_list.append(stock)
+        pairs_info['pairs_list'] = pairs_list
+        print('pairs_list', pairs_list)
+        print('pairs_info', pairs_info)
+        # Return a success response
+        message = "Stock added successfully"
+        # return {"message": "Stock added successfully", "pairs_list": pairs_list}, 200
+        return render_template('minimum_distance.html', message=message)
+    elif 'minimum_remove' in request.form:
+        print('minimumdistance_stockpair1-minimum_remove')
+        # Remove all stocks from pairs_list
+        pairs_list = []
+        print('pairs_list', pairs_list)
+        # Return a success response
+        message = "Stock removed successfully"
+        return render_template('minimum_distance.html', message=message)
+        # return {"message": "Stock removed successfully", "pairs_list": []}, 200
 
-    # Return a success response
-    return {"message": "Stock added successfully", "pairs_list": pairs_list}, 200
+    # # Return a success response
+    message = "bad request!"
+    return render_template('minimum_distance.html', message=message)
+    # return {"message": "bad request!"}, 200
 
 
-@minimumdistance_bp.route('/minimumdistance_stockpair2', methods=['POST'])
-def minimumdistance_stockpair2():
+@minimumdistance_bp.route('/minimumdistance_stockpair4', methods=['POST'])
+def minimumdistance_stockpair4():
     import io
     import base64
     from matplotlib.figure import Figure
     # using global pairs_info
     global pairs_info
     global pairs_list
+
+    print('minimumdistance_stockpair2')
     # Retrieve form data
     start_date = request.form.get('start_date')  # Start date
     end_date = request.form.get('end_date')  # End date
-
+    print('start_date', start_date, 'end_date', end_date)
     # Check if the required data is provided
     if not start_date or not end_date:
         return {"message": "Error: Both start_date and end_date are required."}, 400
@@ -628,12 +718,12 @@ def minimumdistance_stockpair2():
             return {"message": "Error: The number of tickers must be two."}, 400
         start_date = pairs_info['start_date']
         end_date = pairs_info['end_date']
-        # print('start_date', start_date, 'end_date', end_date)
+        print('start_date', start_date, 'end_date', end_date)
         formation_period = 252  # Formation period (1 year)
 
         # Step 2: Fetch Stock Data
         data = get_data(tickers, start=start_date, end=end_date)
-        print('strategy1-data', data)
+        # print('strategy1-data', data)
         if data.empty:
             return render_template('error.html', message="Failed to retrieve stock data.")
 
@@ -641,6 +731,22 @@ def minimumdistance_stockpair2():
         best_pair, min_distance = find_pairs_min_distance(data, formation_period)
         min_distance = round(min_distance, 2)
         print(f"Best pair: {best_pair}, Minimum distance: {min_distance}")
+
+         # Step 4: Insert into the database
+        stock1, stock2 = best_pair
+        query = """
+        INSERT INTO stock_analysis_2 (Symbol_1, Symbol_2, min_distance)
+        VALUES (%s, %s, %s)
+        """
+        data_to_insert = (stock1, stock2, min_distance)
+
+        cursor, connection = getCursor()
+        cursor.execute(query, data_to_insert)
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        print('--------')
 
         fig = Figure(figsize=(8, 4))
         ax = fig.add_subplot(1, 1, 1)
@@ -663,22 +769,170 @@ def minimumdistance_stockpair2():
         plot_data = base64.b64encode(buf.read()).decode('utf-8')
         buf.close()
         # Return a success response
-        return render_template('max_min_distance.html', best_pair=best_pair, min_distance=min_distance, plot_data=plot_data)
+        return render_template('minimum_distance.html', best_pair=best_pair, min_distance=min_distance, plot_data=plot_data)
     except:
         message = "Data analysis not successfully"
-        return render_template('max_min_distance.html', message=message)
+        return render_template('minimum_distance.html', message=message)
+
+
+@minimumdistance_bp.route('/minimumdistance_stockpair2', methods=['POST'])
+def minimumdistance_stockpair2():
+    import io
+    import base64
+    from matplotlib.figure import Figure
+
+    # Using global variables
+    global pairs_info
+    global pairs_list
+
+    print('minimumdistance_stockpair2')
+
+    # Retrieve form data
+    start_date = request.form.get('start_date')  # Start date
+    end_date = request.form.get('end_date')  # End date
+    print('start_date', start_date, 'end_date', end_date)
+
+    # Validate input
+    if not start_date or not end_date:
+        return {"message": "Error: Both start_date and end_date are required."}, 400
+
+    # Update pairs_info with the input dates
+    pairs_info['start_date'] = start_date
+    pairs_info['end_date'] = end_date
+
+    try:
+        tickers = pairs_info.get('pairs_list', [])
+        if len(tickers) < 2:
+            return {"message": "Error: At least two tickers are required."}, 400
+
+        formation_period = 252  # Formation period (1 year)
+
+        # Step 2: Fetch Stock Data
+        data = get_data(tickers, start=start_date, end=end_date)
+        if data.empty:
+            return render_template('error.html', message="Failed to retrieve stock data.")
+
+        # Step 3: Identify Pair with Minimum Distance
+        best_pair, min_distance = find_pairs_min_distance(data, formation_period)
+        min_distance = round(min_distance, 2)
+        stock1, stock2 = best_pair
+        print(f"Best pair: {best_pair}, Minimum distance: {min_distance}")
+
+        try:
+            # Step 4: Insert into the database
+            query = """
+            INSERT INTO stock_analysis_2 (Symbol_1, Symbol_2, min_distance)
+            VALUES (%s, %s, %s)
+            """
+            data_to_insert = (stock1, stock2, min_distance)
+
+            cursor, connection = getCursor()
+            cursor.execute(query, data_to_insert)
+        except Exception as e:
+            print(f"Error analyzing pair {stock1} & {stock2}: {e}")
+
+        # Commit changes and close the connection
+        try:
+            connection.commit()
+            cursor.close()
+            connection.close()
+        except Exception as e:
+            print(f"Error closing the database connection: {e}")
+            # connection.commit()
+            # cursor.close()
+            # connection.close()
+
+        # Step 5: Generate the spread chart
+        fig = Figure(figsize=(8, 4))
+        ax = fig.add_subplot(1, 1, 1)
+
+        stock1_data = data[stock1]
+        stock2_data = data[stock2]
+        spread = stock1_data - stock2_data
+
+        # Plot the price spread
+        ax.plot(spread.index, spread.values, label="Price Spread", color="blue")
+        ax.set_title(f"Spread Chart for {stock1} and {stock2}")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price Spread")
+        ax.legend()
+        ax.grid(True)
+
+        # Encode the plot as Base64
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        plot_data = base64.b64encode(buf.read()).decode('utf-8')
+        buf.close()
+
+        # Return a success response
+        return render_template(
+            'minimum_distance.html',
+            best_pair=best_pair,
+            min_distance=min_distance,
+            plot_data=plot_data
+        )
+    except Exception as e:
+        print(f"Error: {e}")
+        message = "Data analysis not successfully completed due to an error."
+        return render_template('minimum_distance.html', message=message)
+
+
+@minimumdistance_bp.route('/minimumdistance_stockpair3', methods=['POST'])
+def minimumdistance_stockpair3():
+    global pairs_list
+    global pairs_info
+    # Retrieve form data
+    stock = request.form.get('stock').upper()  # Stock symbol
+    print('minimumdistance_stockpair1')
+    button_name = request.form
+    print('button_name', button_name)
+    # Perform logic with stock
+    if not stock or not is_valid_ticker(stock):
+        return "Error: No stock provided.", 400  # Return an error response if 'stock' is missing
+
+    if 'minimum_add' in request.form:
+        print('minimumdistance_stockpair1-minimum_add')
+        # Append stock into pairs_list
+        pairs_list.append(stock)
+        pairs_info['pairs_list'] = pairs_list
+        print('pairs_list', pairs_list)
+        print('pairs_info', pairs_info)
+        # Return a success response
+        message = "Stock added successfully"
+        # return {"message": "Stock added successfully", "pairs_list": pairs_list}, 200
+        return render_template('minimum_distance_method_parameter_form.html', message=message)
+    elif 'minimum_remove' in request.form:
+        print('minimumdistance_stockpair1-minimum_remove')
+        # Remove all stocks from pairs_list
+        pairs_list = []
+        print('pairs_list', pairs_list)
+        # Return a success response
+        message = "Stock removed successfully"
+        return render_template('minimum_distance_method_parameter_form.html', message=message)
+        # return {"message": "Stock removed successfully", "pairs_list": []}, 200
+
+    # # Return a success response
+    message = "bad request!"
+    return render_template('minimum_distance_method_parameter_form.html', message=message)
+    # return {"message": "bad request!"}, 200
 
 
 @minimumdistance_bp.route('/minimumdistance_stockpair_page')
 def minimumdistance_stockpair_page():
     # print('minimum page')
-    return render_template('max_min_distance.html')
+    return render_template('minimum_distance.html')
 
 
 @minimumdistance_bp.route('/minimumdistancemethod_page')
 def minimumdistancemethod_page():
     # print('minimum page')
-    return render_template('max_min_distance_method_parameter_form.html')
+    return render_template('minimum_distance_method_parameter_form.html')
+
+@minimumdistance_bp.route('/pairs_trading_minimum_distance')
+def pairs_trading_minimum_distance():
+    stock_pairs = [['aapl', 'msft', 0.1],]
+    return render_template('pairs_trading_minimum_distance.html', stock_pairs=stock_pairs)
 
 
 if __name__ == '__main__':

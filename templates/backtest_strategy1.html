@@ -68,26 +68,40 @@
                                 <li><a class="dropdown-item" href="#">Grid Strategy</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ url_for('pair.stock_pairs') }}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="pairtradingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-cash-coin me-2"></i> Pairs Trading
                             </a>
+                            <ul class="dropdown-menu" id="pairtradingMenu" aria-labelledby="pairtradingDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('minimumdistance.pairs_trading_minimum_distance') }}">Minimum Distance Strategy</a></li>
+                                <li><a class="dropdown-item" href="#">Grid Trading</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('pair.stock_pairs') }}">Speculative Transaction</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="{{ url_for('risk_control.risk_control') }}">
                                 <i class="bi bi-cash-coin me-2"></i> Risk Management
                             </a>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="orderManagementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-cash-coin me-2"></i> Orders Management
+                            </a>
+                            <ul class="dropdown-menu" id="orderManagementMenu" aria-labelledby="orderManagementMenu">
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.accepted_orders') }}">Accepted Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.filled_orders') }}">Filled Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.closed_orders') }}">Historical Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('order_management.other_orders') }}">Other Orders</a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/dashboard">
                                 <i class="bi bi-cash-coin me-2"></i> Account Settlement
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ url_for('order_management.order_management') }}">
-                                <i class="bi bi-cash-coin me-2"></i> Orders Management
-                            </a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="#">
                                 <i class="bi bi-cash-coin me-2"></i> Notifications
@@ -107,6 +121,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Main Content -->
     <main class="card-body p-4 flex-grow-1 bg-light " style="margin-left: -15%; border: 2px solid #007bff; border-radius: 5px;">
